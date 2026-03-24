@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alex Kumar — Creative Developer & Designer</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React + ReactDOM + Babel (for JSX in browser) -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans:  ["DM Sans", "sans-serif"],
+            serif: ["Playfair Display", "serif"],
+          },
+          colors: {
+            background:      "hsl(0,0%,4%)",
+            foreground:      "hsl(36,27%,93%)",
+            primary:         "hsl(38,65%,55%)",
+            "primary-fg":    "hsl(0,0%,4%)",
+            card:            "hsl(0,0%,7%)",
+            secondary:       "hsl(0,0%,10%)",
+            muted:           "hsl(0,0%,13%)",
+            "muted-fg":      "hsl(0,0%,55%)",
+            border:          "hsl(0,0%,15%)",
+            destructive:     "hsl(0,84%,60%)",
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 5rem;
+    }
+
+    body {
+      background-color: hsl(0,0%,4%);
+      color: hsl(36,27%,93%);
+      font-family: "DM Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1,h2,h3,h4,h5,h6 {
+      font-family: "Playfair Display", serif;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, #D4A843 0%, #F5D78E 50%, #D4A843 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .grid-bg {
+      background-image:
+        linear-gradient(to right, rgba(128,128,128,0.07) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(128,128,128,0.07) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: hsl(0,0%,4%); }
+    ::-webkit-scrollbar-thumb { background: hsl(0,0%,20%); border-radius: 9999px; }
+
+    /* Fade-in animation */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s cubic-bezier(0.21,0.47,0.32,0.98),
+                  transform 0.7s cubic-bezier(0.21,0.47,0.32,0.98);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .fade-left {
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.7s cubic-bezier(0.21,0.47,0.32,0.98),
+                  transform 0.7s cubic-bezier(0.21,0.47,0.32,0.98);
+    }
+    .fade-left.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+    .delay-5 { transition-delay: 0.5s; }
+    .delay-6 { transition-delay: 0.6s; }
+
+    /* Ping animation */
+    @keyframes ping {
+      75%, 100% { transform: scale(2); opacity: 0; }
+    }
+    .animate-ping { animation: ping 1s cubic-bezier(0,0,0.2,1) infinite; }
+
+    /* Navbar underline hover */
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -6px; left: 0;
+      height: 1px; width: 0;
+      background: hsl(38,65%,55%);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Project hover border */
+    .project-row::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: hsl(38,65%,55%);
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.4s ease;
+    }
+    .project-row:hover::before { transform: scaleY(1); }
+
+    /* Bento hover */
+    .bento-tile .hover-fill {
+      position: absolute;
+      inset: 0;
+      background: rgba(212,168,67,0.05);
+      transform: translateY(100%);
+      transition: transform 0.5s ease;
+    }
+    .bento-tile:hover .hover-fill { transform: translateY(0); }
+
+    /* Contact input underline */
+    .input-line {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 1px; width: 0;
+      background: hsl(38,65%,55%);
+      transition: width 0.3s ease;
+    }
+    .contact-input:focus + .input-line { width: 100%; }
+
+    /* Timeline dot hover */
+    .timeline-dot {
+      width: 16px; height: 16px;
+      border-radius: 9999px;
+      background: hsl(0,0%,4%);
+      border: 1px solid hsl(38,65%,55%);
+      transition: background 0.3s;
+    }
+    .timeline-entry:hover .timeline-dot { background: hsl(38,65%,55%); }
+
+    /* Arrow button hover */
+    .arrow-btn {
+      width: 64px; height: 64px;
+      border-radius: 9999px;
+      border: 1px solid hsl(0,0%,15%);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .project-row:hover .arrow-btn {
+      background: hsl(38,65%,55%);
+      border-color: hsl(38,65%,55%);
+      color: hsl(0,0%,4%);
+    }
+
+    /* Social icon btn */
+    .social-btn {
+      width: 56px; height: 56px;
+      border-radius: 9999px;
+      border: 1px solid hsl(0,0%,15%);
+      display: flex; align-items: center; justify-content: center;
+      color: hsl(36,27%,93%);
+      transition: background 0.3s, border-color 0.3s, color 0.3s;
+      text-decoration: none;
+    }
+    .social-btn:hover {
+      background: hsl(38,65%,55%);
+      border-color: hsl(38,65%,55%);
+      color: hsl(0,0%,4%);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVBAR
+============================================================ -->
+<header id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:50;padding:24px 0;transition:all 0.5s;">
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="#home" style="text-decoration:none;">
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:28px;color:hsl(36,27%,93%);letter-spacing:-0.04em;">
+        A<span style="color:hsl(38,65%,55%)">.</span>K
+      </span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav id="desktop-nav" style="display:flex;align-items:center;gap:40px;">
+      <ul style="list-style:none;display:flex;gap:32px;align-items:center;">
+        <li><a href="#about"      class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">About</a></li>
+        <li><a href="#skills"     class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Skills</a></li>
+        <li><a href="#projects"   class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Projects</a></li>
+        <li><a href="#experience" class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Experience</a></li>
+        <li><a href="#contact"    class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Contact</a></li>
+      </ul>
+      <a href="#contact" style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:9999px;border:1px solid hsl(0,0%,15%);background:hsl(0,0%,4%);text-decoration:none;transition:border-color 0.3s;">
+        <span style="position:relative;display:flex;width:8px;height:8px;">
+          <span class="animate-ping" style="position:absolute;inset:0;border-radius:9999px;background:#22c55e;opacity:0.75;"></span>
+          <span style="position:relative;display:inline-flex;border-radius:9999px;width:8px;height:8px;background:#22c55e;"></span>
+        </span>
+        <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.15em;font-weight:500;color:hsl(36,27%,93%);">Available for work</span>
+      </a>
+    </nav>
+
+    <!-- Mobile Toggle -->
+    <button id="mobile-toggle" style="display:none;background:none;border:none;cursor:pointer;color:hsl(36,27%,93%);" aria-label="Toggle menu">
+      <svg id="icon-menu" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg id="icon-close" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile Nav -->
+  <div id="mobile-nav" style="display:none;padding:32px 48px;border-top:1px solid hsl(38,65%,55%,0.2);background:hsl(0,0%,4%);flex-direction:column;gap:32px;">
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:24px;">
+      <li><a href="#about"      onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">About</a></li>
+      <li><a href="#skills"     onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Skills</a></li>
+      <li><a href="#projects"   onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Projects</a></li>
+      <li><a href="#experience" onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Experience</a></li>
+      <li><a href="#contact"    onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+
+<!-- ============================================================
+     HERO
+============================================================ -->
+<section id="home" class="grid-bg" style="position:relative;min-height:100vh;display:flex;align-items:center;padding-top:80px;overflow:hidden;background-color:hsl(0,0%,4%);">
+  <div style="position:relative;z-index:10;width:100%;max-width:1400px;margin:0 auto;padding:0 48px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:64px;">
+
+    <!-- Left (60%) -->
+    <div style="flex:1;min-width:300px;max-width:700px;display:flex;flex-direction:column;align-items:flex-start;">
+
+      <div class="fade-up delay-1" style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
+        <div style="width:48px;height:1px;background:hsl(38,65%,55%);"></div>
+        <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:hsl(0,0%,55%);font-weight:500;">Creative Developer & Designer</span>
+      </div>
+
+      <h1 class="fade-up delay-2" style="font-family:'Playfair Display',serif;font-size:clamp(42px,7vw,88px);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:32px;color:hsl(36,27%,93%);">
+        Turning ideas<br>into digital <span class="text-gradient" style="font-style:italic;font-weight:300;padding-right:4px;">reality.</span>
+      </h1>
+
+      <div class="fade-up delay-3" style="width:100%;max-width:420px;height:1px;background:rgba(212,168,67,0.3);margin-bottom:32px;"></div>
+
+      <p class="fade-up delay-4" style="font-size:clamp(15px,1.5vw,18px);color:hsl(0,0%,55%);max-width:520px;margin-bottom:48px;line-height:1.8;font-weight:300;">
+        I specialize in crafting high-end digital experiences that merge elegant design with robust engineering. Bridging the gap between aesthetics and performance.
+      </p>
+
+      <div class="fade-up delay-5" style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:64px;">
+        <a href="#projects" style="padding:16px 32px;background:hsl(38,65%,55%);color:hsl(0,0%,4%);font-weight:500;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:opacity 0.3s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Selected Works</a>
+        <a href="#contact" style="padding:16px 32px;background:transparent;border:1px solid hsl(0,0%,15%);color:hsl(36,27%,93%);font-weight:500;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:border-color 0.3s,color 0.3s;" onmouseover="this.style.borderColor='hsl(38,65%,55%)';this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.borderColor='hsl(0,0%,15%)';this.style.color='hsl(36,27%,93%)'">Let's Talk</a>
+      </div>
+
+      <!-- Stats -->
+      <div class="fade-up delay-6" style="display:flex;gap:48px;align-items:flex-start;">
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="width:32px;height:1px;background:hsl(0,0%,15%);"></div>
+          <span style="font-family:'Playfair Display',serif;font-size:30px;">5+</span>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:hsl(0,0%,55%);">Years Exp</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="width:32px;height:1px;background:hsl(0,0%,15%);"></div>
+          <span style="font-family:'Playfair Display',serif;font-size:30px;">50+</span>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:hsl(0,0%,55%);">Projects</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="width:32px;height:1px;background:hsl(0,0%,15%);"></div>
+          <span style="font-family:'Playfair Display',serif;font-size:30px;">20+</span>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:hsl(0,0%,55%);">Clients</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right (40%) -->
+    <div class="fade-left delay-4" style="flex:0 0 380px;max-width:420px;position:relative;">
+      <div style="position:absolute;top:-16px;right:-16px;width:100px;height:100px;border-top:1px solid rgba(212,168,67,0.5);border-right:1px solid rgba(212,168,67,0.5);z-index:0;"></div>
+      <div style="position:absolute;bottom:-16px;left:-16px;width:100px;height:100px;border-bottom:1px solid rgba(212,168,67,0.5);border-left:1px solid rgba(212,168,67,0.5);z-index:0;"></div>
+      <div style="position:absolute;top:32px;left:-32px;width:80px;height:160px;background-image:radial-gradient(hsl(38,65%,55%) 1px,transparent 1px);background-size:8px 8px;opacity:0.2;z-index:0;"></div>
+      <div style="position:relative;z-index:10;aspect-ratio:3/4;overflow:hidden;background:hsl(0,0%,7%);border:1px solid hsl(0,0%,15%);box-shadow:0 25px 50px rgba(0,0,0,0.5);">
+        <!-- ========================================================
+             REPLACE THIS SRC WITH YOUR OWN PHOTO URL
+             Example: src="https://yoursite.com/photo.jpg"
+             Or place a photo.jpg in the same folder and use: src="photo.jpg"
+        ======================================================== -->
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=800&fit=crop&crop=face" alt="Alex Kumar" style="width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:filter 0.7s;" onmouseover="this.style.filter='grayscale(0)'" onmouseout="this.style.filter='grayscale(1)'">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(10,10,10,0.8) 0%, transparent 60%);pointer-events:none;"></div>
+      </div>
+    </div>
+
+  </div>
+    </section>
+
+<!-- ============================================================
+     ABOUT — Section 01
+============================================================ -->
+<section id="about" style="padding:128px 0;position:relative;background:hsl(0,0%,4%);overflow:hidden;">
+  <div style="position:absolute;top:40px;left:0;font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.03;pointer-events:none;user-select:none;letter-spacing:-0.04em;">01</div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;">
+
+    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:80px;">
+      <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
+      <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">About Me</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:64px;align-items:start;margin-bottom:80px;">
+      <div class="fade-up delay-2">
+        <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,44px);font-weight:700;line-height:1.2;color:hsl(36,27%,93%);">
+          "Design is intelligence made visible, but code makes it functional."
+        </h3>
+      </div>
+
+      <div class="fade-up delay-4">
+        <div style="color:hsl(0,0%,55%);font-size:17px;line-height:1.9;font-weight:300;margin-bottom:32px;">
+          <p style="margin-bottom:24px;">Based in San Francisco, I am a digital craftsman who thrives at the intersection of pixel-perfect design and complex engineering. With over five years of experience, I approach every project with an editorial eye and technical rigor.</p>
+          <p>My philosophy revolves around minimalism and intent. I believe interfaces should not just look beautiful, but feel intuitive, breathing life into digital products through considered motion, elegant typography, and robust architecture.</p>
+        </div>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:16px;">
+          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Award-winning digital experiences</li>
+          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Full-stack scalable architectures</li>
+          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Obsessive attention to typography and space</li>
+          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Open source contributor and speaker</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- What I Do cards -->
+    <div class="fade-up delay-5" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;">
+      <div style="border:1px solid rgba(255,255,255,0.1);padding:32px;transition:border-color 0.3s,color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+        <div style="font-size:10px;letter-spacing:0.2em;color:hsl(0,0%,55%);text-transform:uppercase;margin-bottom:24px;">01</div>
+        <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Art Direction</h4>
+        <p style="font-size:14px;color:hsl(0,0%,55%);line-height:1.7;font-weight:300;">Crafting distinct visual identities and editorial layouts that capture attention and communicate purpose.</p>
+      </div>
+      <div style="border:1px solid rgba(255,255,255,0.1);padding:32px;transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+        <div style="font-size:10px;letter-spacing:0.2em;color:hsl(0,0%,55%);text-transform:uppercase;margin-bottom:24px;">02</div>
+        <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Frontend Engineering</h4>
+        <p style="font-size:14px;color:hsl(0,0%,55%);line-height:1.7;font-weight:300;">Building lightning-fast, accessible interfaces using React, motion libraries, and modern web standards.</p>
+      </div>
+      <div style="border:1px solid rgba(255,255,255,0.1);padding:32px;transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+        <div style="font-size:10px;letter-spacing:0.2em;color:hsl(0,0%,55%);text-transform:uppercase;margin-bottom:24px;">03</div>
+        <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Backend Architecture</h4>
+        <p style="font-size:14px;color:hsl(0,0%,55%);line-height:1.7;font-weight:300;">Designing secure, scalable server systems and APIs that power complex applications reliably.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     SKILLS — Section 02
+============================================================ -->
+<section id="skills" style="padding:128px 0;position:relative;background:hsl(0,0%,6%);overflow:hidden;">
+  <div style="position:absolute;top:40px;right:40px;font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.03;pointer-events:none;user-select:none;letter-spacing:-0.04em;">02</div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;">
+
+    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:80px;">
+      <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
+      <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Expertise</span>
+    </div>
+
+    <!-- Bento Grid -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:120px;gap:16px;">
+
+      <div class="bento-tile fade-up delay-1" style="grid-column:span 2;grid-row:span 2;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Framework</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(18px,2.5vw,26px);font-weight:700;color:hsl(36,27%,93%);">React / Next.js</h3>
+        </div>
+      </div>
+
+      <div class="bento-tile fade-up delay-2" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,11%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Language</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">TypeScript</h3>
+        </div>
+      </div>
+
+      <div class="bento-tile fade-up delay-3" style="grid-column:span 1;grid-row:span 2;position:relative;overflow:hidden;border:1px solid rgba(212,168,67,0.3);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(38,65%,55%);transition:border-color 0.3s;cursor:default;">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(10,10,10,0.6);margin-bottom:8px;">Discipline</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(0,0%,4%);">UI/UX Design</h3>
+        </div>
+      </div>
+
+      <div class="bento-tile fade-up delay-1" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Animation</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">Framer Motion</h3>
+        </div>
+      </div>
+
+      <div class="bento-tile fade-up delay-2" style="grid-column:span 2;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,11%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Styling</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">Tailwind CSS</h3>
+        </div>
+      </div>
+
+      <div class="bento-tile fade-up delay-3" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Backend</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">Node.js</h3>
+        </div>
+      </div>
+
+      <div class="bento-tile fade-up delay-1" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,11%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Database</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">PostgreSQL</h3>
+        </div>
+      </div>
+
+      <div class="bento-tile fade-up delay-2" style="grid-column:span 2;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
+        <div class="hover-fill"></div>
+        <div style="position:relative;z-index:1;">
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Creative</div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">WebGL / Three.js</h3>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     PROJECTS — Section 03
+============================================================ -->
+<section id="projects" style="padding:128px 0;position:relative;background:hsl(0,0%,4%);overflow:hidden;">
+  <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.02;pointer-events:none;user-select:none;letter-spacing:-0.04em;">03</div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;">
+
+    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:80px;">
+      <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
+      <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Selected Works</span>
+    </div>
+
+    <div style="border-top:1px solid hsl(0,0%,15%);">
+
+      <!-- Project 01 -->
+      <div class="project-row fade-up delay-1" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);transition:color 0.3s;line-height:1;">01</div>
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Full-Stack Development</div>
+        </div>
+        <div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">E-Commerce OS</h3>
+          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">A headless e-commerce platform built with Next.js, Stripe, and a custom CMS. Features real-time inventory and a highly optimized checkout flow.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Next.js</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">TypeScript</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Prisma</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">PostgreSQL</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;align-items:center;">
+          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project 02 -->
+      <div class="project-row fade-up delay-2" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);line-height:1;">02</div>
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Web Application</div>
+        </div>
+        <div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">TaskFlow Pro</h3>
+          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">A collaborative project management tool for remote teams. Includes real-time updates via WebSockets and drag-and-drop kanban boards.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">React</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Node.js</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Socket.io</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">MongoDB</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;align-items:center;">
+          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project 03 -->
+      <div class="project-row fade-up delay-3" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);line-height:1;">03</div>
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Creative Portfolio</div>
+        </div>
+        <div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Maison Studio</h3>
+          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">An award-winning immersive portfolio for an interior design agency. Uses advanced WebGL scrolling effects and fluid page transitions.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Three.js<span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Framer Motion</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">React</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">GSAP</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;align-items:center;">
+          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Project 04 -->
+      <div class="project-row fade-up delay-4" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);line-height:1;">04</div>
+          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Data Visualization</div>
+        </div>
+        <div>
+          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Metrics Dashboard</h3>
+          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">Financial analytics dashboard visualizing complex datasets. Aggregates data from multiple APIs and renders interactive charts.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Vue.js</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">D3.js</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Express</span>
+            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Redis</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;align-items:center;">
+          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
+            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================
+     EXPERIENCE — Section 04
+============================================================ -->
+<section id="experience" style="padding:128px 0;position:relative;background:hsl(0,0%,4%);overflow:hidden;">
+  <div style="position:absolute;top:0;right:0;font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.02;pointer-events:none;user-select:none;letter-spacing:-0.04em;">04</div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;display:flex;flex-wrap:wrap;gap:64px;">
+
+    <!-- Left sticky label -->
+    <div class="fade-up" style="flex:0 0 300px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+        <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Journey</span>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,48px);font-weight:700;line-height:1.2;margin-bottom:24px;color:hsl(36,27%,93%);">Experience &<br>Education.</h3>
+      <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">A timeline of my professional career, focusing on environments where design and technology intersect.</p>
+    </div>
+
+    <!-- Right timeline -->
+    <div style="flex:1;min-width:280px;position:relative;">
+      <div style="position:absolute;left:7px;top:16px;bottom:16px;width:1px;background:hsl(0,0%,15%);z-index:0;"></div>
+
+      <!-- Entry 1 -->
+      <div class="timeline-entry fade-up delay-2" style="position:relative;padding-left:64px;margin-bottom:80px;">
+        <div class="timeline-dot" style="position:absolute;left:0;top:8px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(38,65%,55%);margin-bottom:8px;font-weight:500;">2021 — Present</div>
+            <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:hsl(36,27%,93%);">TechCorp Global</h4>
+          </div>
+          <div>
+            <h5 style="font-size:17px;font-weight:500;margin-bottom:12px;color:hsl(36,27%,93%);">Senior Software Engineer</h5>
+            <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">Architecting high-performance web applications and leading a team of multidisciplinary engineers. Championed a complete rebuild of the core platform resulting in a 40% performance increase.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry 2 -->
+      <div class="timeline-entry fade-up delay-3" style="position:relative;padding-left:64px;margin-bottom:80px;">
+        <div class="timeline-dot" style="position:absolute;left:0;top:8px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(38,65%,55%);margin-bottom:8px;font-weight:500;">2018 — 2021</div>
+            <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:hsl(36,27%,93%);">Studio Innovate</h4>
+          </div>
+          <div>
+            <h5 style="font-size:17px;font-weight:500;margin-bottom:12px;color:hsl(36,27%,93%);">Creative Developer</h5>
+            <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">Bridged the gap between design and engineering, creating award-winning interactive experiences for global brands. Specialized in web animations and micro-interactions.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Entry 3 -->
+      <div class="timeline-entry fade-up delay-4" style="position:relative;padding-left:64px;">
+        <div class="timeline-dot" style="position:absolute;left:0;top:8px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
+          <div>
+            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(38,65%,55%);margin-bottom:8px;font-weight:500;">2016 — 2018</div>
+            <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:hsl(36,27%,93%);">Digital Startup Inc.</h4>
+          </div>
+          <div>
+            <h5 style="font-size:17px;font-weight:500;margin-bottom:12px;color:hsl(36,27%,93%);">Frontend Engineer</h5>
+            <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">Developed and maintained client-facing interfaces. Implemented modern state management and improved accessibility standards across the product suite.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     CONTACT — Section 05
+============================================================ -->
+<section id="contact" style="padding:128px 0;position:relative;background:hsl(0,0%,7%);overflow:hidden;">
+  <div style="position:absolute;bottom:0;right:0;transform:translateY(25%);font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.02;pointer-events:none;user-select:none;letter-spacing:-0.04em;">05</div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:64px;">
+
+    <!-- Left -->
+    <div class="fade-up">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+        <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
+        <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Inquiries</span>
+      </div>
+      <h3 style="font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,72px);font-weight:700;line-height:1.1;margin-bottom:32px;color:hsl(36,27%,93%);">
+        Let's work<br><span class="text-gradient" style="font-style:italic;font-weight:300;">together.</span>
+      </h3>
+      <p style="font-size:16px;color:hsl(0,0%,55%);font-weight:300;line-height:1.8;margin-bottom:48px;max-width:360px;">Have a project in mind, or just want to say hello? Fill out the form or reach out directly via email.</p>
+
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        <!-- Email -->
+        <a href="mailto:hello@example.com" class="social-btn" title="Email">
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        </a>
+        <!-- GitHub -->
+        <a href="#" class="social-btn" title="GitHub">
+          <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        </a>
+        <!-- LinkedIn -->
+        <a href="#" class="social-btn" title="LinkedIn">
+          <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <!-- Twitter/X -->
+        <a href="#" class="social-btn" title="Twitter">
+          <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.741l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right — Form -->
+    <div class="fade-up delay-3">
+      <form id="contact-form" style="display:flex;flex-direction:column;gap:40px;margin-top:32px;" onsubmit="submitForm(event)">
+
+        <div style="position:relative;">
+          <input type="text" id="f-name" placeholder="Your Name" required class="contact-input" style="width:100%;background:transparent;border:none;border-bottom:1px solid hsl(0,0%,20%);padding:16px 0;font-size:17px;color:hsl(36,27%,93%);outline:none;font-family:'DM Sans',sans-serif;">
+          <span class="input-line"></span>
+        </div>
+
+        <div style="position:relative;">
+          <input type="email" id="f-email" placeholder="Email Address" required class="contact-input" style="width:100%;background:transparent;border:none;border-bottom:1px solid hsl(0,0%,20%);padding:16px 0;font-size:17px;color:hsl(36,27%,93%);outline:none;font-family:'DM Sans',sans-serif;">
+          <span class="input-line"></span>
+        </div>
+
+        <div style="position:relative;">
+          <textarea id="f-message" placeholder="Project Details" required rows="4" class="contact-input" style="width:100%;background:transparent;border:none;border-bottom:1px solid hsl(0,0%,20%);padding:16px 0;font-size:17px;color:hsl(36,27%,93%);outline:none;resize:none;font-family:'DM Sans',sans-serif;"></textarea>
+          <span class="input-line"></span>
+        </div>
+
+        <button type="submit" style="display:inline-flex;align-items:center;gap:16px;background:hsl(38,65%,55%);color:hsl(0,0%,4%);padding:16px 32px;font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;border:none;cursor:pointer;width:fit-content;transition:opacity 0.3s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">
+          Send Request
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
+        </button>
+
+      </form>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ============================================================
+     FOOTER============================================================ -->
+<footer style="background:hsl(0,0%,4%);border-top:1px solid rgba(255,255,255,0.06);padding:32px 48px;">
+  <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:hsl(0,0%,40%);font-weight:500;">
+    <div><span style="color:hsl(36,27%,93%);">A.K</span> © <span id="year"></span></div>
+    <div>Crafted with passion</div>
+    <div style="display:flex;gap:24px;">
+      <a href="#" style="color:hsl(0,0%,40%);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.color='hsl(0,0%,40%)'">GH</a>
+      <a href="#" style="color:hsl(0,0%,40%);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.color='hsl(0,0%,40%)'">IN</a>
+      <a href="#" style="color:hsl(0,0%,40%);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.color='hsl(0,0%,40%)'">TW</a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+<script>
+  // Set year
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // Navbar scroll effect
+  const navbar = document.getElementById("navbar");
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 20) {
+      navbar.style.background = "rgba(10,10,10,0.85)";
+      navbar.style.backdropFilter = "blur(12px)";
+      navbar.style.borderBottom = "1px solid rgba(212,168,67,0.15)";
+      navbar.style.padding = "16px 0";
+    } else {
+      navbar.style.background = "transparent";
+      navbar.style.backdropFilter = "none";
+      navbar.style.borderBottom = "none";
+      navbar.style.padding = "24px 0";
+    }
+  });
+
+  // Mobile nav toggle
+  const toggle = document.getElementById("mobile-toggle");
+  const mobileNav = document.getElementById("mobile-nav");
+  const iconMenu = document.getElementById("icon-menu");
+  const iconClose = document.getElementById("icon-close");
+
+  toggle.addEventListener("click", () => {
+    const open = mobileNav.style.display === "flex";
+    mobileNav.style.display = open ? "none" : "flex";
+    iconMenu.style.display = open ? "block" : "none";
+    iconClose.style.display = open ? "none" : "block";
+  });
+
+  function closeMobile() {
+    mobileNav.style.display = "none";
+    iconMenu.style.display = "block";
+    iconClose.style.display = "none";
+  }
+
+  // Responsive mobile nav visibility
+  function handleResize() {
+    const desktopNav = document.getElementById("desktop-nav");
+    if (window.innerWidth < 768) {
+      desktopNav.style.display = "none";
+      toggle.style.display = "block";
+    } else {
+      desktopNav.style.display = "flex";
+      toggle.style.display = "none";
+      mobileNav.style.display = "none";
+    }
+  }
+  handleResize();
+  window.addEventListener("resize", handleResize);
+
+  // Scroll fade-in animations
+  const fadeEls = document.querySelectorAll(".fade-up, .fade-left");
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+
+  fadeEls.forEach(el => observer.observe(el));
+
+  // Contact form
+  function submitForm(e) {
+    e.preventDefault();
+    const name = document.getElementById("f-name").value;
+    const email = document.getElementById("f-email").value;
+    const message = document.getElementById("f-message").value;
+    if (!name || !email || !message) return;
+
+    // Show success (in real project connect to a backend/formspree/emailjs)
+    const btn = e.target.querySelector("button[type=submit]");
+    const orig = btn.innerHTML;
+    btn.innerHTML = "Message Sent ✓";
+    btn.style.background = "hsl(142,71%,40%)";
+    btn.style.color = "white";
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.style.background = "hsl(38,65%,55%)";
+      btn.style.color = "hsl(0,0%,4%)";
+      e.target.reset();
+    }, 3000);
+  }
+</script>
+
+<script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-repl-id="a06ce7c8-152f-4ac9-8be5-68afa9d09eb1"></script></body>
+</html>
