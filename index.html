@@ -1,834 +1,611 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alex Kumar — Creative Developer & Designer</title>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- React + ReactDOM + Babel (for JSX in browser) -->
-  <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans:  ["DM Sans", "sans-serif"],
-            serif: ["Playfair Display", "serif"],
-          },
-          colors: {
-            background:      "hsl(0,0%,4%)",
-            foreground:      "hsl(36,27%,93%)",
-            primary:         "hsl(38,65%,55%)",
-            "primary-fg":    "hsl(0,0%,4%)",
-            card:            "hsl(0,0%,7%)",
-            secondary:       "hsl(0,0%,10%)",
-            muted:           "hsl(0,0%,13%)",
-            "muted-fg":      "hsl(0,0%,55%)",
-            border:          "hsl(0,0%,15%)",
-            destructive:     "hsl(0,84%,60%)",
-          },
-        },
-      },
-    };
-  </script>
-
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      scroll-padding-top: 5rem;
-    }
-
-    body {
-      background-color: hsl(0,0%,4%);
-      color: hsl(36,27%,93%);
-      font-family: "DM Sans", sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    h1,h2,h3,h4,h5,h6 {
-      font-family: "Playfair Display", serif;
-    }
-
-    .text-gradient {
-      background: linear-gradient(135deg, #D4A843 0%, #F5D78E 50%, #D4A843 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .grid-bg {
-      background-image:
-        linear-gradient(to right, rgba(128,128,128,0.07) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(128,128,128,0.07) 1px, transparent 1px);
-      background-size: 24px 24px;
-    }
-
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: hsl(0,0%,4%); }
-    ::-webkit-scrollbar-thumb { background: hsl(0,0%,20%); border-radius: 9999px; }
-
-    /* Fade-in animation */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s cubic-bezier(0.21,0.47,0.32,0.98),
-                  transform 0.7s cubic-bezier(0.21,0.47,0.32,0.98);
-    }
-    .fade-up.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .fade-left {
-      opacity: 0;
-      transform: translateX(30px);
-      transition: opacity 0.7s cubic-bezier(0.21,0.47,0.32,0.98),
-                  transform 0.7s cubic-bezier(0.21,0.47,0.32,0.98);
-    }
-    .fade-left.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .delay-1 { transition-delay: 0.1s; }
-    .delay-2 { transition-delay: 0.2s; }
-    .delay-3 { transition-delay: 0.3s; }
-    .delay-4 { transition-delay: 0.4s; }
-    .delay-5 { transition-delay: 0.5s; }
-    .delay-6 { transition-delay: 0.6s; }
-
-    /* Ping animation */
-    @keyframes ping {
-      75%, 100% { transform: scale(2); opacity: 0; }
-    }
-    .animate-ping { animation: ping 1s cubic-bezier(0,0,0.2,1) infinite; }
-
-    /* Navbar underline hover */
-    .nav-link::after {
-      content: "";
-      position: absolute;
-      bottom: -6px; left: 0;
-      height: 1px; width: 0;
-      background: hsl(38,65%,55%);
-      transition: width 0.3s ease;
-    }
-    .nav-link:hover::after { width: 100%; }
-
-    /* Project hover border */
-    .project-row::before {
-      content: "";
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 2px;
-      background: hsl(38,65%,55%);
-      transform: scaleY(0);
-      transform-origin: top;
-      transition: transform 0.4s ease;
-    }
-    .project-row:hover::before { transform: scaleY(1); }
-
-    /* Bento hover */
-    .bento-tile .hover-fill {
-      position: absolute;
-      inset: 0;
-      background: rgba(212,168,67,0.05);
-      transform: translateY(100%);
-      transition: transform 0.5s ease;
-    }
-    .bento-tile:hover .hover-fill { transform: translateY(0); }
-
-    /* Contact input underline */
-    .input-line {
-      position: absolute;
-      bottom: 0; left: 0;
-      height: 1px; width: 0;
-      background: hsl(38,65%,55%);
-      transition: width 0.3s ease;
-    }
-    .contact-input:focus + .input-line { width: 100%; }
-
-    /* Timeline dot hover */
-    .timeline-dot {
-      width: 16px; height: 16px;
-      border-radius: 9999px;
-      background: hsl(0,0%,4%);
-      border: 1px solid hsl(38,65%,55%);
-      transition: background 0.3s;
-    }
-    .timeline-entry:hover .timeline-dot { background: hsl(38,65%,55%); }
-
-    /* Arrow button hover */
-    .arrow-btn {
-      width: 64px; height: 64px;
-      border-radius: 9999px;
-      border: 1px solid hsl(0,0%,15%);
-      display: flex; align-items: center; justify-content: center;
-      transition: background 0.3s, border-color 0.3s, color 0.3s;
-    }
-    .project-row:hover .arrow-btn {
-      background: hsl(38,65%,55%);
-      border-color: hsl(38,65%,55%);
-      color: hsl(0,0%,4%);
-    }
-
-    /* Social icon btn */
-    .social-btn {
-      width: 56px; height: 56px;
-      border-radius: 9999px;
-      border: 1px solid hsl(0,0%,15%);
-      display: flex; align-items: center; justify-content: center;
-      color: hsl(36,27%,93%);
-      transition: background 0.3s, border-color 0.3s, color 0.3s;
-      text-decoration: none;
-    }
-    .social-btn:hover {
-      background: hsl(38,65%,55%);
-      border-color: hsl(38,65%,55%);
-      color: hsl(0,0%,4%);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Creative Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #FF6B35;
+            --accent: #1A1A2E;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--accent);
+            color: #F7F7F7;
+            overflow-x: hidden;
+        }
+        .page {
+            display: none;
+            min-height: 100vh;
+            animation: fadeIn 0.5s ease;
+        }
+        .page.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .nav-container {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .nav-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            transition: all 0.3s;
+        }
+        .nav-btn.active, .nav-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        .hero-text {
+            font-family: 'Syne', sans-serif;
+            font-weight: 800;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            line-height: 0.9;
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #FF6B35 0%, #FFD93D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.5rem;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: #FF6B35;
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        .btn-secondary:hover {
+            border-color: #FF6B35;
+            color: #FF6B35;
+        }
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+        }
+        .project-card {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .project-card:hover {
+            border-color: #FF6B35;
+            transform: translateY(-5px);
+        }
+        .project-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .project-card:hover img {
+            transform: scale(1.1);
+        }
+        .project-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26,26,46,0.95) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+        .skill-bar {
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            margin-top: 0.5rem;
+        }
+        .skill-progress {
+            height: 100%;
+            background: #FF6B35;
+            width: 0;
+            transition: width 1s ease;
+        }
+        .stat-number {
+            font-family: 'Syne', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #FF6B35;
+        }
+        .contact-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.2rem;
+            padding: 0.75rem 0;
+            width: 100%;
+            outline: none;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .contact-input:focus {
+            border-color: #FF6B35;
+        }
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #10B981;
+            color: white;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .availability-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+        .availability-badge.busy {
+            background: #EF4444;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .marquee {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 15s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @media (max-width: 768px) {
+            .nav-container {
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+            .nav-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.6rem;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<!-- ============================================================
-     NAVBAR
-============================================================ -->
-<header id="navbar" style="position:fixed;top:0;left:0;right:0;z-index:50;padding:24px 0;transition:all 0.5s;">
-  <div style="max-width:1400px;margin:0 auto;padding:0 48px;display:flex;align-items:center;justify-content:space-between;">
-
-    <a href="#home" style="text-decoration:none;">
-      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:28px;color:hsl(36,27%,93%);letter-spacing:-0.04em;">
-        A<span style="color:hsl(38,65%,55%)">.</span>K
-      </span>
-    </a>
-
-    <!-- Desktop Nav -->
-    <nav id="desktop-nav" style="display:flex;align-items:center;gap:40px;">
-      <ul style="list-style:none;display:flex;gap:32px;align-items:center;">
-        <li><a href="#about"      class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">About</a></li>
-        <li><a href="#skills"     class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Skills</a></li>
-        <li><a href="#projects"   class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Projects</a></li>
-        <li><a href="#experience" class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Experience</a></li>
-        <li><a href="#contact"    class="nav-link" style="position:relative;font-size:11px;font-weight:500;color:hsl(0,0%,55%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;transition:color 0.3s;">Contact</a></li>
-      </ul>
-      <a href="#contact" style="display:inline-flex;align-items:center;gap:8px;padding:8px 20px;border-radius:9999px;border:1px solid hsl(0,0%,15%);background:hsl(0,0%,4%);text-decoration:none;transition:border-color 0.3s;">
-        <span style="position:relative;display:flex;width:8px;height:8px;">
-          <span class="animate-ping" style="position:absolute;inset:0;border-radius:9999px;background:#22c55e;opacity:0.75;"></span>
-          <span style="position:relative;display:inline-flex;border-radius:9999px;width:8px;height:8px;background:#22c55e;"></span>
-        </span>
-        <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.15em;font-weight:500;color:hsl(36,27%,93%);">Available for work</span>
-      </a>
+      <!-- Navigation -->
+    <nav class="nav-container">
+        <button class="nav-btn active" id="nav-home">Home</button>
+        <button class="nav-btn" id="nav-work">Work</button>
+        <button class="nav-btn" id="nav-contact">Contact</button>
     </nav>
-
-    <!-- Mobile Toggle -->
-    <button id="mobile-toggle" style="display:none;background:none;border:none;cursor:pointer;color:hsl(36,27%,93%);" aria-label="Toggle menu">
-      <svg id="icon-menu" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-      <svg id="icon-close" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:none;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
-
-  <!-- Mobile Nav -->
-  <div id="mobile-nav" style="display:none;padding:32px 48px;border-top:1px solid hsl(38,65%,55%,0.2);background:hsl(0,0%,4%);flex-direction:column;gap:32px;">
-    <ul style="list-style:none;display:flex;flex-direction:column;gap:24px;">
-      <li><a href="#about"      onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">About</a></li>
-      <li><a href="#skills"     onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Skills</a></li>
-      <li><a href="#projects"   onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Projects</a></li>
-      <li><a href="#experience" onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Experience</a></li>
-      <li><a href="#contact"    onclick="closeMobile()" style="font-size:14px;font-weight:500;color:hsl(36,27%,93%);text-transform:uppercase;letter-spacing:0.15em;text-decoration:none;">Contact</a></li>
-    </ul>
-  </div>
-</header>
-
-
-<!-- ============================================================
-     HERO
-============================================================ -->
-<section id="home" class="grid-bg" style="position:relative;min-height:100vh;display:flex;align-items:center;padding-top:80px;overflow:hidden;background-color:hsl(0,0%,4%);">
-  <div style="position:relative;z-index:10;width:100%;max-width:1400px;margin:0 auto;padding:0 48px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:64px;">
-
-    <!-- Left (60%) -->
-    <div style="flex:1;min-width:300px;max-width:700px;display:flex;flex-direction:column;align-items:flex-start;">
-
-      <div class="fade-up delay-1" style="display:flex;align-items:center;gap:16px;margin-bottom:32px;">
-        <div style="width:48px;height:1px;background:hsl(38,65%,55%);"></div>
-        <span style="font-size:11px;text-transform:uppercase;letter-spacing:0.2em;color:hsl(0,0%,55%);font-weight:500;">Creative Developer & Designer</span>
-      </div>
-
-      <h1 class="fade-up delay-2" style="font-family:'Playfair Display',serif;font-size:clamp(42px,7vw,88px);font-weight:700;line-height:1.05;letter-spacing:-0.02em;margin-bottom:32px;color:hsl(36,27%,93%);">
-        Turning ideas<br>into digital <span class="text-gradient" style="font-style:italic;font-weight:300;padding-right:4px;">reality.</span>
-      </h1>
-
-      <div class="fade-up delay-3" style="width:100%;max-width:420px;height:1px;background:rgba(212,168,67,0.3);margin-bottom:32px;"></div>
-
-      <p class="fade-up delay-4" style="font-size:clamp(15px,1.5vw,18px);color:hsl(0,0%,55%);max-width:520px;margin-bottom:48px;line-height:1.8;font-weight:300;">
-        I specialize in crafting high-end digital experiences that merge elegant design with robust engineering. Bridging the gap between aesthetics and performance.
-      </p>
-
-      <div class="fade-up delay-5" style="display:flex;flex-wrap:wrap;gap:24px;margin-bottom:64px;">
-        <a href="#projects" style="padding:16px 32px;background:hsl(38,65%,55%);color:hsl(0,0%,4%);font-weight:500;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:opacity 0.3s;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">Selected Works</a>
-        <a href="#contact" style="padding:16px 32px;background:transparent;border:1px solid hsl(0,0%,15%);color:hsl(36,27%,93%);font-weight:500;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:border-color 0.3s,color 0.3s;" onmouseover="this.style.borderColor='hsl(38,65%,55%)';this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.borderColor='hsl(0,0%,15%)';this.style.color='hsl(36,27%,93%)'">Let's Talk</a>
-      </div>
-
-      <!-- Stats -->
-      <div class="fade-up delay-6" style="display:flex;gap:48px;align-items:flex-start;">
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="width:32px;height:1px;background:hsl(0,0%,15%);"></div>
-          <span style="font-family:'Playfair Display',serif;font-size:30px;">5+</span>
-          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:hsl(0,0%,55%);">Years Exp</span>
+        <!-- Page 1: Home -->
+    <section id="home" class="page active">
+        <div class="min-h-screen flex flex-col justify-center px-6 md:px-16 pt-20">
+            <div class="max-w-6xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <p class="text-sm uppercase tracking-widest text-gray-400">Creative Developer & Designer</p>
+                    
+                    <h1 class="hero-text">
+                        CREATIVE<br><span class="gradient-text">MIND</span>
+                    </h1>
+                    
+                    <p class="text-gray-300 leading-relaxed max-w-md">
+                        I craft digital experiences that blend aesthetics with functionality. Specializing in interactive web applications, motion design, and creative development.
+                    </p>
+                    
+                    <div class="flex flex-wrap gap-4">
+                        <button class="btn btn-primary" id="btn-view-projects">
+                            View Projects →
+                        </button>
+                        <button class="btn btn-secondary" id="btn-download-cv">
+                            Download CV
+                        </button>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-6 pt-6 border-t border-white/10">
+                        <div>
+                            <div class="stat-number" data-target="5">0</div>
+                            <p class="text-xs text-gray-400 mt-1">Years Experience</p>
+                        </div>
+                        <div>
+                            <div class="stat-number" data-target="50">0</div>
+                            <p class="text-xs text-gray-400 mt-1">Projects Done</p>
+                        </div>
+                        <div>
+                            <div class="stat-number" data-target="30">0</div>
+                            <p class="text-xs text-gray-400 mt-1">Happy Clients</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Your Photo -->
+                <div class="hidden lg:block">
+                    <div class="relative max-w-sm mx-auto">
+                        <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-blue-600 rounded-2xl opacity-20 blur-2xl"></div>
+                        <div class="relative rounded-2xl overflow-hidden border-2 border-white/10 aspect-[3/4]">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="Profile" class="w-full h-full object-cover" id="profile-img">
+                        </div>
+                        <div class="absolute -top-3 -right-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-bold">
+                            Available
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="width:32px;height:1px;background:hsl(0,0%,15%);"></div>
-          <span style="font-family:'Playfair Display',serif;font-size:30px;">50+</span>
-          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:hsl(0,0%,55%);">Projects</span>
+                <!-- Skills -->
+        <div class="px-6 md:px-16 py-16 bg-black/20">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-2xl font-bold mb-8 font-['Syne']">Technical Expertise</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>JavaScript / TypeScript</span>
+                                <span class="text-orange-500">95%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="95"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>React / Next.js</span>
+                                <span class="text-orange-500">90%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Three.js / WebGL</span>
+                                <span class="text-orange-500">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>GSAP / Framer Motion</span>
+                                <span class="text-orange-500">92%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="92"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Node.js / Express</span>
+                                <span class="text-orange-500">88%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>UI/UX Design</span>
+                                <span class="text-orange-500">80%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="80"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-          <div style="width:32px;height:1px;background:hsl(0,0%,15%);"></div>
-          <span style="font-family:'Playfair Display',serif;font-size:30px;">20+</span>
-          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:hsl(0,0%,55%);">Clients</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Right (40%) -->
-    <div class="fade-left delay-4" style="flex:0 0 380px;max-width:420px;position:relative;">
-      <div style="position:absolute;top:-16px;right:-16px;width:100px;height:100px;border-top:1px solid rgba(212,168,67,0.5);border-right:1px solid rgba(212,168,67,0.5);z-index:0;"></div>
-      <div style="position:absolute;bottom:-16px;left:-16px;width:100px;height:100px;border-bottom:1px solid rgba(212,168,67,0.5);border-left:1px solid rgba(212,168,67,0.5);z-index:0;"></div>
-      <div style="position:absolute;top:32px;left:-32px;width:80px;height:160px;background-image:radial-gradient(hsl(38,65%,55%) 1px,transparent 1px);background-size:8px 8px;opacity:0.2;z-index:0;"></div>
-      <div style="position:relative;z-index:10;aspect-ratio:3/4;overflow:hidden;background:hsl(0,0%,7%);border:1px solid hsl(0,0%,15%);box-shadow:0 25px 50px rgba(0,0,0,0.5);">
-        <!-- ========================================================
-             REPLACE THIS SRC WITH YOUR OWN PHOTO URL
-             Example: src="https://yoursite.com/photo.jpg"
-             Or place a photo.jpg in the same folder and use: src="photo.jpg"
-        ======================================================== -->
-        <img src="https://raw.githubusercontent.com/Sweetu-Site/.pk/main/IMG_20260325_033609.png" 
-     alt="My Photo"
-     style="width:100%; height:100%; object-fit:cover;">
-        <div style="position:absolute;inset:0;background:linear-gradient(to top, rgba(10,10,10,0.8) 0%, transparent 60%);pointer-events:none;"></div>
-      </div>
-    </div>
-
-  </div>
     </section>
-
-<!-- ============================================================
-     ABOUT — Section 01
-============================================================ -->
-<section id="about" style="padding:128px 0;position:relative;background:hsl(0,0%,4%);overflow:hidden;">
-  <div style="position:absolute;top:40px;left:0;font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.03;pointer-events:none;user-select:none;letter-spacing:-0.04em;">01</div>
-
-  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;">
-
-    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:80px;">
-      <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
-      <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">About Me</span>
-    </div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:64px;align-items:start;margin-bottom:80px;">
-      <div class="fade-up delay-2">
-        <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,44px);font-weight:700;line-height:1.2;color:hsl(36,27%,93%);">
-          "Design is intelligence made visible, but code makes it functional."
-        </h3>
-      </div>
-
-      <div class="fade-up delay-4">
-        <div style="color:hsl(0,0%,55%);font-size:17px;line-height:1.9;font-weight:300;margin-bottom:32px;">
-          <p style="margin-bottom:24px;">Based in San Francisco, I am a digital craftsman who thrives at the intersection of pixel-perfect design and complex engineering. With over five years of experience, I approach every project with an editorial eye and technical rigor.</p>
-          <p>My philosophy revolves around minimalism and intent. I believe interfaces should not just look beautiful, but feel intuitive, breathing life into digital products through considered motion, elegant typography, and robust architecture.</p>
+        <!-- Page 2: Work -->
+    <section id="work" class="page">
+        <div class="px-6 md:px-16 pt-24 pb-12">
+            <div class="max-w-6xl mx-auto">
+                <p class="text-orange-500 text-sm uppercase tracking-widest mb-2">Portfolio</p>
+                <h2 class="text-4xl md:text-6xl font-bold font-['Syne'] mb-4">Selected <span class="gradient-text">Works</span></h2>
+                <p class="text-gray-400 max-w-xl mb-12">A curated collection of projects that showcase my expertise in creative development.</p>
+                                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Project 1 -->
+                    <div class="project-card aspect-[4/5]" onclick="alert('Neon Finance Project')">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80" alt="Project 1">
+                        <div class="project-overlay">
+                            <span class="text-orange-500 text-xs uppercase">Web Application</span>
+                            <h3 class="text-xl font-bold font-['Syne']">Neon Finance</h3>
+                            <p class="text-gray-300 text-sm">Cryptocurrency dashboard with WebGL effects.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 2 -->
+                    <div class="project-card aspect-[4/5]" onclick="alert('Luxe Store Project')">
+                        <img src="https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=600&q=80" alt="Project 2">
+                        <div class="project-overlay">
+                            <span class="text-orange-500 text-xs uppercase">E-Commerce</span>
+                            <h3 class="text-xl font-bold font-['Syne']">Luxe Store</h3>
+                            <p class="text-gray-300 text-sm">High-end fashion e-commerce platform.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 3 -->
+                    <div class="project-card aspect-[4/5]" onclick="alert('Aurora Studio Project')">
+                        <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?w=600&q=80" alt="Project 3">
+                        <div class="project-overlay">
+                            <span class="text-orange-500 text-xs uppercase">Creative Agency</span>
+                            <h3 class="text-xl font-bold font-['Syne']">Aurora Studio</h3>
+                            <p class="text-gray-300 text-sm">Award-winning agency website.</p>
+                        </div>
+                    </div>
+                                        <!-- Project 4 -->
+                    <div class="project-card aspect-[4/5]" onclick="alert('Cloud Sync Project')">
+                        <img src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&q=80" alt="Project 4">
+                        <div class="project-overlay">
+                            <span class="text-orange-500 text-xs uppercase">SaaS Platform</span>
+                            <h3 class="text-xl font-bold font-['Syne']">Cloud Sync</h3>
+                            <p class="text-gray-300 text-sm">Enterprise cloud management tool.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 5 -->
+                    <div class="project-card aspect-[4/5]" onclick="alert('Digital Waves Project')">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80" alt="Project 5">
+                        <div class="project-overlay">
+                            <span class="text-orange-500 text-xs uppercase">Interactive Art</span>
+                            <h3 class="text-xl font-bold font-['Syne']">Digital Waves</h3>
+                            <p class="text-gray-300 text-sm">Generative art installation.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Project 6 -->
+                    <div class="project-card aspect-[4/5]" onclick="alert('FitTrack Pro Project')">
+                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80" alt="Project 6">
+                        <div class="project-overlay">
+                            <span class="text-orange-500 text-xs uppercase">Mobile App</span>
+                            <h3 class="text-xl font-bold font-['Syne']">FitTrack Pro</h3>
+                            <p class="text-gray-300 text-sm">Fitness tracking application.</p>
+                        </div>
+                    </div>
+                                </div>
+                                                <!-- Marquee -->
+                <div class="mt-12 border-y border-white/10 py-6 marquee">
+                    <div class="marquee-content text-4xl font-['Syne'] font-bold text-white/10">
+                        REACT • THREE.JS • GSAP • NODE.JS • TYPESCRIPT • NEXT.JS • WEBGL • CREATIVE DEVELOPMENT • REACT • THREE.JS • GSAP • NODE.JS • TYPESCRIPT • NEXT.JS • WEBGL • CREATIVE DEVELOPMENT •
+                    </div>
+                </div>
+            </div>
         </div>
-        <ul style="list-style:none;display:flex;flex-direction:column;gap:16px;">
-          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Award-winning digital experiences</li>
-          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Full-stack scalable architectures</li>
-          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Obsessive attention to typography and space</li>
-          <li style="display:flex;align-items:center;gap:16px;font-size:14px;color:hsl(36,27%,93%);"><span style="width:16px;height:1px;background:hsl(38,65%,55%);display:inline-block;flex-shrink:0;"></span> Open source contributor and speaker</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- What I Do cards -->
-    <div class="fade-up delay-5" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;">
-      <div style="border:1px solid rgba(255,255,255,0.1);padding:32px;transition:border-color 0.3s,color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
-        <div style="font-size:10px;letter-spacing:0.2em;color:hsl(0,0%,55%);text-transform:uppercase;margin-bottom:24px;">01</div>
-        <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Art Direction</h4>
-        <p style="font-size:14px;color:hsl(0,0%,55%);line-height:1.7;font-weight:300;">Crafting distinct visual identities and editorial layouts that capture attention and communicate purpose.</p>
-      </div>
-      <div style="border:1px solid rgba(255,255,255,0.1);padding:32px;transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
-        <div style="font-size:10px;letter-spacing:0.2em;color:hsl(0,0%,55%);text-transform:uppercase;margin-bottom:24px;">02</div>
-        <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Frontend Engineering</h4>
-        <p style="font-size:14px;color:hsl(0,0%,55%);line-height:1.7;font-weight:300;">Building lightning-fast, accessible interfaces using React, motion libraries, and modern web standards.</p>
-      </div>
-      <div style="border:1px solid rgba(255,255,255,0.1);padding:32px;transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.5)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
-        <div style="font-size:10px;letter-spacing:0.2em;color:hsl(0,0%,55%);text-transform:uppercase;margin-bottom:24px;">03</div>
-        <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Backend Architecture</h4>
-        <p style="font-size:14px;color:hsl(0,0%,55%);line-height:1.7;font-weight:300;">Designing secure, scalable server systems and APIs that power complex applications reliably.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ============================================================
-     SKILLS — Section 02
-============================================================ -->
-<section id="skills" style="padding:128px 0;position:relative;background:hsl(0,0%,6%);overflow:hidden;">
-  <div style="position:absolute;top:40px;right:40px;font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.03;pointer-events:none;user-select:none;letter-spacing:-0.04em;">02</div>
-
-  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;">
-
-    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:80px;">
-      <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
-      <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Expertise</span>
-    </div>
-
-    <!-- Bento Grid -->
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:120px;gap:16px;">
-
-      <div class="bento-tile fade-up delay-1" style="grid-column:span 2;grid-row:span 2;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Framework</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(18px,2.5vw,26px);font-weight:700;color:hsl(36,27%,93%);">React / Next.js</h3>
+    </section>
+        <!-- Page 3: Contact -->
+    <section id="contact" class="page">
+        <div class="min-h-screen flex items-center px-6 md:px-16 pt-20 pb-12">
+            <div class="max-w-6xl mx-auto w-full grid lg:grid-cols-2 gap-12">
+                <div>
+                    <p class="text-orange-500 text-sm uppercase tracking-widest mb-2">Get in Touch</p>
+                    <h2 class="text-4xl md:text-6xl font-bold font-['Syne'] mb-6">Let's Create<br>Something <span class="gradient-text">Amazing</span></h2>
+                    <p class="text-gray-300 mb-8">Have a project in mind? I'd love to hear about it.</p>
+                                        <!-- Contact Info -->
+                    <div class="space-y-4 mb-8">
+                        <!-- Email -->
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-orange-500">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Email</p>
+                                <a href="mailto:sheikhsahibbrand@gmail.com" class="font-medium hover:text-orange-500 transition">sheikhsahibbrand@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Location -->
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-orange-500">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400">Location</p>
+                                <p class="font-medium">Main Bazar Sheikhupura</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Availability Badge -->
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-orange-500">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                    <line x1="8" y1="21" x2="16" y2="21"/>
+                                    <line x1="12" y1="17" x2="12" y2="21"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-gray-400 mb-1">Availability</p>
+                                <div class="availability-badge" id="availability-btn" onclick="toggleAvailability()">
+                                    <span class="dot"></span>
+                                    <span id="availability-text">Open for freelance</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                        <!-- WhatsApp Button -->
+                    <a href="https://wa.me/923016305418" target="_blank" class="btn btn-whatsapp mb-6">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                        </svg>
+                        <span>Chat on WhatsApp</span>
+                    </a>
+                    
+                    <!-- Social Links -->
+                    <div class="flex gap-3">
+                        <a href="https://github.com" target="_blank" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-orange-500 hover:text-orange-500 transition text-sm font-bold">GH</a>
+                        <a href="https://linkedin.com" target="_blank" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-orange-500 hover:text-orange-500 transition text-sm font-bold">LI</a>
+                        <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center hover:border-orange-500 hover:text-orange-500 transition text-sm font-bold">IG</a>
+                    </div>
+                </div>
+                                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 md:p-8">
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1 uppercase">Your Name</label>
+                            <input type="text" class="contact-input" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1 uppercase">Email</label>
+                            <input type="email" class="contact-input" placeholder="john@example.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1 uppercase">Project Type</label>
+                            <select class="contact-input bg-transparent cursor-pointer">
+                                <option value="" class="bg-gray-900">Select service</option>
+                                <option value="web" class="bg-gray-900">Web Development</option>
+                                <option value="design" class="bg-gray-900">UI/UX Design</option>
+                                <option value="motion" class="bg-gray-900">Motion Design</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-gray-400 mb-1 uppercase">Message</label>
+                            <textarea class="contact-input resize-none" rows="3" placeholder="Tell me about your project..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-full justify-center">
+                            Send Message ✈️
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
+    </section>
+        <script>
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('nav-' + pageId).classList.add('active');
+            window.scrollTo(0, 0);
+            if (pageId === 'home') animateHome();
+        }
 
-      <div class="bento-tile fade-up delay-2" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,11%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Language</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">TypeScript</h3>
-        </div>
-      </div>
+        // Nav buttons
+        document.getElementById('nav-home').addEventListener('click', function() { showPage('home'); });
+        document.getElementById('nav-work').addEventListener('click', function() { showPage('work'); });
+        document.getElementById('nav-contact').addEventListener('click', function() { showPage('contact'); });
 
-      <div class="bento-tile fade-up delay-3" style="grid-column:span 1;grid-row:span 2;position:relative;overflow:hidden;border:1px solid rgba(212,168,67,0.3);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(38,65%,55%);transition:border-color 0.3s;cursor:default;">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(10,10,10,0.6);margin-bottom:8px;">Discipline</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(0,0%,4%);">UI/UX Design</h3>
-        </div>
-      </div>
+        // Home buttons
+        document.getElementById('btn-view-projects').addEventListener('click', function() { showPage('work'); });
+        document.getElementById('btn-download-cv').addEventListener('click', function() { 
+            alert('CV Download starting...');
+        });
+                  // Availability Toggle Function
+        let isAvailable = true;
+        function toggleAvailability() {
+            const btn = document.getElementById('availability-btn');
+            const text = document.getElementById('availability-text');
+            const dot = btn.querySelector('.dot');
+            
+            isAvailable = !isAvailable;
+            
+            if (isAvailable) {
+                btn.classList.remove('busy');
+                text.textContent = 'Open for freelance';
+                dot.style.background = 'white';
+                alert('Status: Available for freelance projects!');
+            } else {
+                btn.classList.add('busy');
+                text.textContent = 'Currently busy';
+                dot.style.background = '#FCA5A5';
+                alert('Status: Currently busy with projects!');
+            }
+        }
 
-      <div class="bento-tile fade-up delay-1" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Animation</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">Framer Motion</h3>
-        </div>
-      </div>
+        // Contact Form
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            btn.innerHTML = '<span>Message Sent! ✅</span>';
+            btn.style.background = '#10B981';
+            setTimeout(() => {
+                btn.innerHTML = '<span>Send Message ✈️</span>';
+                btn.style.background = '';
+                this.reset();
+            }, 2000);
+        });
+                  // Animate counters
+        function animateHome() {
+            document.querySelectorAll('.stat-number').forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current);
+                    }
+                }, 50);
+            });
+            
+            setTimeout(() => {
+                document.querySelectorAll('.skill-progress').forEach(bar => {
+                    bar.style.width = bar.getAttribute('data-width') + '%';
+                });
+            }, 300);
+        }
 
-      <div class="bento-tile fade-up delay-2" style="grid-column:span 2;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,11%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Styling</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">Tailwind CSS</h3>
-        </div>
-      </div>
-
-      <div class="bento-tile fade-up delay-3" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Backend</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">Node.js</h3>
-        </div>
-      </div>
-
-      <div class="bento-tile fade-up delay-1" style="grid-column:span 1;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,11%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Database</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">PostgreSQL</h3>
-        </div>
-      </div>
-
-      <div class="bento-tile fade-up delay-2" style="grid-column:span 2;grid-row:span 1;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.08);padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:hsl(0,0%,7%);transition:border-color 0.3s;cursor:default;" onmouseover="this.style.borderColor='rgba(212,168,67,0.4)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'">
-        <div class="hover-fill"></div>
-        <div style="position:relative;z-index:1;">
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-bottom:8px;">Creative</div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:hsl(36,27%,93%);">WebGL / Three.js</h3>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ============================================================
-     PROJECTS — Section 03
-============================================================ -->
-<section id="projects" style="padding:128px 0;position:relative;background:hsl(0,0%,4%);overflow:hidden;">
-  <div style="position:absolute;top:50%;left:0;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.02;pointer-events:none;user-select:none;letter-spacing:-0.04em;">03</div>
-
-  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;">
-
-    <div class="fade-up" style="display:flex;align-items:center;gap:12px;margin-bottom:80px;">
-      <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
-      <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Selected Works</span>
-    </div>
-
-    <div style="border-top:1px solid hsl(0,0%,15%);">
-
-      <!-- Project 01 -->
-      <div class="project-row fade-up delay-1" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);transition:color 0.3s;line-height:1;">01</div>
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Full-Stack Development</div>
-        </div>
-        <div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">E-Commerce OS</h3>
-          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">A headless e-commerce platform built with Next.js, Stripe, and a custom CMS. Features real-time inventory and a highly optimized checkout flow.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Next.js</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">TypeScript</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Prisma</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">PostgreSQL</span>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:flex-end;align-items:center;">
-          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Project 02 -->
-      <div class="project-row fade-up delay-2" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);line-height:1;">02</div>
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Web Application</div>
-        </div>
-        <div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">TaskFlow Pro</h3>
-          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">A collaborative project management tool for remote teams. Includes real-time updates via WebSockets and drag-and-drop kanban boards.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">React</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Node.js</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Socket.io</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">MongoDB</span>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:flex-end;align-items:center;">
-          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Project 03 -->
-      <div class="project-row fade-up delay-3" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);line-height:1;">03</div>
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Creative Portfolio</div>
-        </div>
-        <div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Maison Studio</h3>
-          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">An award-winning immersive portfolio for an interior design agency. Uses advanced WebGL scrolling effects and fluid page transitions.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Three.js<span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Framer Motion</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">React</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">GSAP</span>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:flex-end;align-items:center;">
-          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Project 04 -->
-      <div class="project-row fade-up delay-4" style="position:relative;border-bottom:1px solid hsl(0,0%,15%);padding:64px 32px;display:grid;grid-template-columns:1fr 2fr 1fr;gap:32px;align-items:center;transition:background 0.4s;cursor:pointer;" onmouseover="this.style.background='hsl(0,0%,7%)'" onmouseout="this.style.background='transparent'">
-        <div>
-          <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:hsl(0,0%,13%);line-height:1;">04</div>
-          <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);margin-top:16px;">Data Visualization</div>
-        </div>
-        <div>
-          <h3 style="font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,44px);font-weight:700;margin-bottom:16px;color:hsl(36,27%,93%);">Metrics Dashboard</h3>
-          <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;margin-bottom:24px;max-width:500px;">Financial analytics dashboard visualizing complex datasets. Aggregates data from multiple APIs and renders interactive charts.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:10px;">
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Vue.js</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">D3.js</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Express</span>
-            <span style="font-size:11px;padding:4px 12px;border:1px solid hsl(0,0%,15%);color:hsl(0,0%,55%);letter-spacing:0.05em;">Redis</span>
-          </div>
-        </div>
-        <div style="display:flex;justify-content:flex-end;align-items:center;">
-          <a href="#" class="arrow-btn" style="color:hsl(36,27%,93%);text-decoration:none;">
-            <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transform:rotate(-45deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-          </a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-<!-- ============================================================
-     EXPERIENCE — Section 04
-============================================================ -->
-<section id="experience" style="padding:128px 0;position:relative;background:hsl(0,0%,4%);overflow:hidden;">
-  <div style="position:absolute;top:0;right:0;font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.02;pointer-events:none;user-select:none;letter-spacing:-0.04em;">04</div>
-
-  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;display:flex;flex-wrap:wrap;gap:64px;">
-
-    <!-- Left sticky label -->
-    <div class="fade-up" style="flex:0 0 300px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
-        <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
-        <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Journey</span>
-      </div>
-      <h3 style="font-family:'Playfair Display',serif;font-size:clamp(32px,4vw,48px);font-weight:700;line-height:1.2;margin-bottom:24px;color:hsl(36,27%,93%);">Experience &<br>Education.</h3>
-      <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">A timeline of my professional career, focusing on environments where design and technology intersect.</p>
-    </div>
-
-    <!-- Right timeline -->
-    <div style="flex:1;min-width:280px;position:relative;">
-      <div style="position:absolute;left:7px;top:16px;bottom:16px;width:1px;background:hsl(0,0%,15%);z-index:0;"></div>
-
-      <!-- Entry 1 -->
-      <div class="timeline-entry fade-up delay-2" style="position:relative;padding-left:64px;margin-bottom:80px;">
-        <div class="timeline-dot" style="position:absolute;left:0;top:8px;"></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
-          <div>
-            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(38,65%,55%);margin-bottom:8px;font-weight:500;">2021 — Present</div>
-            <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:hsl(36,27%,93%);">TechCorp Global</h4>
-          </div>
-          <div>
-            <h5 style="font-size:17px;font-weight:500;margin-bottom:12px;color:hsl(36,27%,93%);">Senior Software Engineer</h5>
-            <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">Architecting high-performance web applications and leading a team of multidisciplinary engineers. Championed a complete rebuild of the core platform resulting in a 40% performance increase.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Entry 2 -->
-      <div class="timeline-entry fade-up delay-3" style="position:relative;padding-left:64px;margin-bottom:80px;">
-        <div class="timeline-dot" style="position:absolute;left:0;top:8px;"></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
-          <div>
-            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(38,65%,55%);margin-bottom:8px;font-weight:500;">2018 — 2021</div>
-            <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:hsl(36,27%,93%);">Studio Innovate</h4>
-          </div>
-          <div>
-            <h5 style="font-size:17px;font-weight:500;margin-bottom:12px;color:hsl(36,27%,93%);">Creative Developer</h5>
-            <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">Bridged the gap between design and engineering, creating award-winning interactive experiences for global brands. Specialized in web animations and micro-interactions.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Entry 3 -->
-      <div class="timeline-entry fade-up delay-4" style="position:relative;padding-left:64px;">
-        <div class="timeline-dot" style="position:absolute;left:0;top:8px;"></div>
-        <div style="display:grid;grid-template-columns:1fr 2fr;gap:24px;">
-          <div>
-            <div style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:hsl(38,65%,55%);margin-bottom:8px;font-weight:500;">2016 — 2018</div>
-            <h4 style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:hsl(36,27%,93%);">Digital Startup Inc.</h4>
-          </div>
-          <div>
-            <h5 style="font-size:17px;font-weight:500;margin-bottom:12px;color:hsl(36,27%,93%);">Frontend Engineer</h5>
-            <p style="font-size:15px;color:hsl(0,0%,55%);line-height:1.8;font-weight:300;">Developed and maintained client-facing interfaces. Implemented modern state management and improved accessibility standards across the product suite.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ============================================================
-     CONTACT — Section 05
-============================================================ -->
-<section id="contact" style="padding:128px 0;position:relative;background:hsl(0,0%,7%);overflow:hidden;">
-  <div style="position:absolute;bottom:0;right:0;transform:translateY(25%);font-family:'Playfair Display',serif;font-size:clamp(160px,25vw,400px);line-height:1;font-weight:700;color:hsl(36,27%,93%);opacity:0.02;pointer-events:none;user-select:none;letter-spacing:-0.04em;">05</div>
-
-  <div style="max-width:1400px;margin:0 auto;padding:0 48px;position:relative;z-index:10;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:64px;">
-
-    <!-- Left -->
-    <div class="fade-up">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
-        <div style="width:8px;height:8px;border-radius:9999px;background:hsl(38,65%,55%);"></div>
-        <span style="font-size:11px;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:hsl(0,0%,55%);">Inquiries</span>
-      </div>
-      <h3 style="font-family:'Playfair Display',serif;font-size:clamp(36px,5vw,72px);font-weight:700;line-height:1.1;margin-bottom:32px;color:hsl(36,27%,93%);">
-        Let's work<br><span class="text-gradient" style="font-style:italic;font-weight:300;">together.</span>
-      </h3>
-      <p style="font-size:16px;color:hsl(0,0%,55%);font-weight:300;line-height:1.8;margin-bottom:48px;max-width:360px;">Have a project in mind, or just want to say hello? Fill out the form or reach out directly via email.</p>
-
-      <div style="display:flex;gap:16px;flex-wrap:wrap;">
-        <!-- Email -->
-        <a href="mailto:sheikhsahibbrand@gmail.com" class="social-btn" title="Email">
-          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
-        </a>
-        <!-- GitHub -->
-        <a href="https://github.com/sweetu-site" class="social-btn" title="GitHub" target="_blank">
-          <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.373 0 12c0 5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-        </a>
-        <!-- Instagram -->
-<a href="https://www.instagram.com/sweetu_hun_yawr" class="social-btn" title="Instagram" target="_blank">
-  <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M7.75 2C4.57 2 2 4.57 2 7.75v8.5C2 19.43 4.57 22 7.75 22h8.5C19.43 22 22 19.43 22 16.25v-8.5C22 4.57 19.43 2 16.25 2h-8.5zm0 2h8.5C18.43 4 20 5.57 20 7.75v8.5c0 2.18-1.57 3.75-3.75 3.75h-8.5C5.57 20 4 18.43 4 16.25v-8.5C4 5.57 5.57 4 7.75 4zm8.75 1.5a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5zM12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/>
-  </svg>
-</a>
-        </a>
-        <!-- WhatsApp -->
-<a href="https://wa.me/923016305418" class="social-btn" title="WhatsApp" target="_blank">
-  <svg width="22" height="22" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M20.52 3.48A11.91 11.91 0 0 0 12.05 0C5.4 0 .02 5.38.02 12.02c0 2.12.55 4.2 1.6 6.04L0 24l6.11-1.6a12.06 12.06 0 0 0 5.94 1.52h.01c6.64 0 12.02-5.38 12.02-12.02 0-3.21-1.25-6.23-3.56-8.42zM12.06 21.8h-.01a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.63.95.97-3.54-.23-.36a9.78 9.78 0 0 1-1.5-5.25c0-5.44 4.42-9.86 9.86-9.86 2.63 0 5.1 1.02 6.96 2.89a9.8 9.8 0 0 1 2.9 6.97c0 5.44-4.42 9.86-9.87 9.86zm5.43-7.36c-.3-.15-1.77-.87-2.04-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.28-.47-2.43-1.5-.9-.8-1.5-1.8-1.67-2.1-.17-.3-.02-.46.13-.6.14-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.07-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.05 1.02-1.05 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.48.71.3 1.26.48 1.7.61.71.23 1.36.2 1.87.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/>
-  </svg>
-</a>
-        </a>
-      </div>
-    </div>
-
-    <!-- Right — Form -->
-    <div class="fade-up delay-3">
-      <form id="contact-form" style="display:flex;flex-direction:column;gap:40px;margin-top:32px;" onsubmit="submitForm(event)">
-
-        <div style="position:relative;">
-          <input type="text" id="f-name" placeholder="Your Name" required class="contact-input" style="width:100%;background:transparent;border:none;border-bottom:1px solid hsl(0,0%,20%);padding:16px 0;font-size:17px;color:hsl(36,27%,93%);outline:none;font-family:'DM Sans',sans-serif;">
-          <span class="input-line"></span>
-        </div>
-
-        <div style="position:relative;">
-          <input type="email" id="f-email" placeholder="Email Address" required class="contact-input" style="width:100%;background:transparent;border:none;border-bottom:1px solid hsl(0,0%,20%);padding:16px 0;font-size:17px;color:hsl(36,27%,93%);outline:none;font-family:'DM Sans',sans-serif;">
-          <span class="input-line"></span>
-        </div>
-
-        <div style="position:relative;">
-          <textarea id="f-message" placeholder="Project Details" required rows="4" class="contact-input" style="width:100%;background:transparent;border:none;border-bottom:1px solid hsl(0,0%,20%);padding:16px 0;font-size:17px;color:hsl(36,27%,93%);outline:none;resize:none;font-family:'DM Sans',sans-serif;"></textarea>
-          <span class="input-line"></span>
-        </div>
-
-        <button type="submit" style="display:inline-flex;align-items:center;gap:16px;background:hsl(38,65%,55%);color:hsl(0,0%,4%);padding:16px 32px;font-size:13px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;border:none;cursor:pointer;width:fit-content;transition:opacity 0.3s;font-family:'DM Sans',sans-serif;" onmouseover="this.style.opacity=0.85" onmouseout="this.style.opacity=1">
-          Send Request
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/></svg>
-        </button>
-
-      </form>
-    </div>
-
-  </div>
-</section>
-
-
-<!-- ============================================================
-     FOOTER============================================================ -->
-<footer style="background:hsl(0,0%,4%);border-top:1px solid rgba(255,255,255,0.06);padding:32px 48px;">
-  <div style="max-width:1400px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:hsl(0,0%,40%);font-weight:500;">
-    <div><span style="color:hsl(36,27%,93%);">A.K</span> © <span id="year"></span></div>
-    <div>Crafted with passion</div>
-    <div style="display:flex;gap:24px;">
-      <a href="#" style="color:hsl(0,0%,40%);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.color='hsl(0,0%,40%)'">GH</a>
-      <a href="#" style="color:hsl(0,0%,40%);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.color='hsl(0,0%,40%)'">IN</a>
-      <a href="#" style="color:hsl(0,0%,40%);text-decoration:none;transition:color 0.3s;" onmouseover="this.style.color='hsl(38,65%,55%)'" onmouseout="this.style.color='hsl(0,0%,40%)'">TW</a>
-    </div>
-  </div>
-</footer>
-
-
-<!-- ============================================================
-     JAVASCRIPT
-============================================================ -->
-<script>
-  // Set year
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  // Navbar scroll effect
-  const navbar = document.getElementById("navbar");
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 20) {
-      navbar.style.background = "rgba(10,10,10,0.85)";
-      navbar.style.backdropFilter = "blur(12px)";
-      navbar.style.borderBottom = "1px solid rgba(212,168,67,0.15)";
-      navbar.style.padding = "16px 0";
-    } else {
-      navbar.style.background = "transparent";
-      navbar.style.backdropFilter = "none";
-      navbar.style.borderBottom = "none";
-      navbar.style.padding = "24px 0";
-    }
-  });
-
-  // Mobile nav toggle
-  const toggle = document.getElementById("mobile-toggle");
-  const mobileNav = document.getElementById("mobile-nav");
-  const iconMenu = document.getElementById("icon-menu");
-  const iconClose = document.getElementById("icon-close");
-
-  toggle.addEventListener("click", () => {
-    const open = mobileNav.style.display === "flex";
-    mobileNav.style.display = open ? "none" : "flex";
-    iconMenu.style.display = open ? "block" : "none";
-    iconClose.style.display = open ? "none" : "block";
-  });
-
-  function closeMobile() {
-    mobileNav.style.display = "none";
-    iconMenu.style.display = "block";
-    iconClose.style.display = "none";
-  }
-
-  // Responsive mobile nav visibility
-  function handleResize() {
-    const desktopNav = document.getElementById("desktop-nav");
-    if (window.innerWidth < 768) {
-      desktopNav.style.display = "none";
-      toggle.style.display = "block";
-    } else {
-      desktopNav.style.display = "flex";
-      toggle.style.display = "none";
-      mobileNav.style.display = "none";
-    }
-  }
-  handleResize();
-  window.addEventListener("resize", handleResize);
-
-  // Scroll fade-in animations
-  const fadeEls = document.querySelectorAll(".fade-up, .fade-left");
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
-    });
-  }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
-
-  fadeEls.forEach(el => observer.observe(el));
-
-  // Contact form
-  function submitForm(e) {
-    e.preventDefault();
-    const name = document.getElementById("f-name").value;
-    const email = document.getElementById("f-email").value;
-    const message = document.getElementById("f-message").value;
-    if (!name || !email || !message) return;
-
-    // Show success (in real project connect to a backend/formspree/emailjs)
-    const btn = e.target.querySelector("button[type=submit]");
-    const orig = btn.innerHTML;
-    btn.innerHTML = "Message Sent ✓";
-    btn.style.background = "hsl(142,71%,40%)";
-    btn.style.color = "white";
-    setTimeout(() => {
-      btn.innerHTML = orig;
-      btn.style.background = "hsl(38,65%,55%)";
-      btn.style.color = "hsl(0,0%,4%)";
-      e.target.reset();
-    }, 3000);
-  }
-</script>
-
-<script src="https://replit-cdn.com/replit-pill/replit-pill.global.js" data-repl-id="a06ce7c8-152f-4ac9-8be5-68afa9d09eb1"></script></body>
+        // Initialize
+        window.addEventListener('load', function() {
+            animateHome();
+        });
+    </script>
+</body>
 </html>
