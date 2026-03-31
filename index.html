@@ -87,6 +87,7 @@
         }
                 .project-card {
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
         }
         .project-card:hover {
             transform: translateY(-10px) scale(1.02);
@@ -100,6 +101,7 @@
         
         .magnetic-btn {
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
         }
         
         .reveal-text {
@@ -149,7 +151,7 @@
             width: 50px;
             height: 50px;
             background: rgba(99, 102, 241, 0.1);
-                }
+            }
                 .noise {
             position: fixed;
             top: 0;
@@ -184,18 +186,10 @@
         .tilt-card {
             transform-style: preserve-3d;
             transition: transform 0.1s;
+            cursor: pointer;
         }
         .tilt-content {
             transform: translateZ(50px);
-        }
-        
-        .draw-line {
-            stroke-dasharray: 1000;
-            stroke-dashoffset: 1000;
-            animation: draw 2s ease forwards;
-        }
-        @keyframes draw {
-            to { stroke-dashoffset: 0; }
         }
         
         .pulse-ring {
@@ -211,6 +205,7 @@
         
         .nav-link {
             position: relative;
+            cursor: pointer;
         }
         .nav-link::after {
             content: '';
@@ -225,7 +220,7 @@
         .nav-link:hover::after,
         .nav-link.active::after {
             width: 100%;
-            }
+                                                   }
                 .testimonial-slide {
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -250,6 +245,29 @@
             70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
             100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: #1e293b;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 overflow-x-hidden selection:bg-indigo-500 selection:text-white">
@@ -265,7 +283,7 @@
     <nav class="fixed w-full z-50 transition-all duration-500" id="navbar">
         <div class="glass-dark mx-4 mt-4 rounded-2xl px-6 py-4 max-w-7xl mx-auto">
             <div class="flex items-center justify-between">
-                <a href="#" class="text-2xl font-bold gradient-text tracking-tighter">SWEETU</a>
+                <a href="#" class="text-2xl font-bold gradient-text tracking-tighter" onclick="window.scrollTo(0,0); return false;">SWEETU</a>
                 <div class="hidden md:flex items-center gap-8">
                     <a href="#home" class="nav-link text-sm font-medium hover:text-indigo-400 transition-colors">Home</a>
                     <a href="#about" class="nav-link text-sm font-medium hover:text-indigo-400 transition-colors">About</a>
@@ -273,18 +291,18 @@
                     <a href="#portfolio" class="nav-link text-sm font-medium hover:text-indigo-400 transition-colors">Portfolio</a>
                     <a href="#contact" class="magnetic-btn px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all">Let's Talk</a>
                 </div>
-                <button class="md:hidden" id="mobileMenuBtn">
+                <button class="md:hidden" id="mobileMenuBtn" onclick="toggleMobileMenu()">
                     <i data-lucide="menu" class="w-6 h-6"></i>
                 </button>
             </div>
         </div>
         <div class="hidden md:hidden glass-dark mx-4 mt-2 rounded-2xl p-6" id="mobileMenu">
             <div class="flex flex-col gap-4">
-                <a href="#home" class="text-lg font-medium">Home</a>
-                <a href="#about" class="text-lg font-medium">About</a>
-                <a href="#services" class="text-lg font-medium">Services</a>
-                <a href="#portfolio" class="text-lg font-medium">Portfolio</a>
-                <a href="#contact" class="text-lg font-medium text-indigo-400">Contact</a>
+                <a href="#home" class="text-lg font-medium" onclick="closeMobileMenu()">Home</a>
+                <a href="#about" class="text-lg font-medium" onclick="closeMobileMenu()">About</a>
+                <a href="#services" class="text-lg font-medium" onclick="closeMobileMenu()">Services</a>
+                <a href="#portfolio" class="text-lg font-medium" onclick="closeMobileMenu()">Portfolio</a>
+                <a href="#contact" class="text-lg font-medium text-indigo-400" onclick="closeMobileMenu()">Contact</a>
             </div>
         </div>
     </nav>
@@ -296,7 +314,7 @@
         <div class="container mx-auto px-6 relative z-10">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div class="space-y-8">
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-indigo-300 reveal-text">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-indigo-300 reveal-text cursor-pointer" onclick="showNotification('Available for projects!')">
                         <span class="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></span>
                         Available for freelance work
                     </div>
@@ -312,10 +330,10 @@
                     </p>
                     
                     <div class="flex flex-wrap gap-4 reveal-text" style="transition-delay: 0.3s;">
-                        <a href="#portfolio" class="magnetic-btn group px-8 py-4 bg-white text-slate-900 rounded-full font-semibold flex items-center gap-2 hover:shadow-2xl hover:shadow-white/20 transition-all">
+                        <button onclick="scrollToSection('portfolio')" class="magnetic-btn group px-8 py-4 bg-white text-slate-900 rounded-full font-semibold flex items-center gap-2 hover:shadow-2xl hover:shadow-white/20 transition-all">
                             View Work
                             <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
-                        </a>
+                        </button>
                         <a href="https://wa.me/923016305418" target="_blank" class="magnetic-btn px-8 py-4 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-all flex items-center gap-2">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                             WhatsApp Me
@@ -323,7 +341,7 @@
                     </div>
                     
                     <div class="flex items-center gap-6 pt-8 reveal-text" style="transition-delay: 0.4s;">
-                        <div class="flex -space-x-3">
+                        <div class="flex -space-x-3 cursor-pointer" onclick="showNotification('50+ Happy Clients Worldwide!')">
                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 border-2 border-slate-950 flex items-center justify-center text-xs font-bold">5★</div>
                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-slate-950 flex items-center justify-center text-xs font-bold">50+</div>
                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 border-2 border-slate-950 flex items-center justify-center text-xs font-bold">100%</div>
@@ -338,22 +356,22 @@
                 <div class="relative float">
                     <div class="relative w-full aspect-square max-w-lg mx-auto">
                         <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-3xl morph-bg"></div>
-                        <div class="absolute inset-4 glass rounded-2xl overflow-hidden">
+                        <div class="absolute inset-4 glass rounded-2xl overflow-hidden cursor-pointer" onclick="openImageModal('IMG_20260325_033609.png')">
                             <img src="IMG_20260325_033609.png" alt="Sweetu - Creative Professional" class="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-700">
                         </div>
-                        <div class="absolute -top-6 -right-6 glass px-4 py-3 rounded-xl animate-bounce" style="animation-duration: 3s;">
+                        <div class="absolute -top-6 -right-6 glass px-4 py-3 rounded-xl animate-bounce cursor-pointer hover:bg-slate-800 transition-all" style="animation-duration: 3s;" onclick="showNotification('UI/UX Design Expert')">
                             <div class="flex items-center gap-2">
                                 <i data-lucide="palette" class="w-5 h-5 text-pink-400"></i>
                                 <span class="text-sm font-semibold">UI/UX Design</span>
                             </div>
                         </div>
-                        <div class="absolute -bottom-6 -left-6 glass px-4 py-3 rounded-xl animate-bounce" style="animation-duration: 4s;">
+                        <div class="absolute -bottom-6 -left-6 glass px-4 py-3 rounded-xl animate-bounce cursor-pointer hover:bg-slate-800 transition-all" style="animation-duration: 4s;" onclick="showNotification('Full Stack Developer')">
                             <div class="flex items-center gap-2">
                                 <i data-lucide="code-2" class="w-5 h-5 text-indigo-400"></i>
                                 <span class="text-sm font-semibold">Full Stack Dev</span>
                             </div>
                         </div>
-                        <div class="absolute top-1/2 -right-12 glass px-4 py-3 rounded-xl hidden lg:block">
+                        <div class="absolute top-1/2 -right-12 glass px-4 py-3 rounded-xl hidden lg:block cursor-pointer hover:bg-slate-800 transition-all" onclick="showNotification('Fast Delivery Guaranteed')">
                             <div class="flex items-center gap-2">
                                 <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i>
                                 <span class="text-sm font-semibold">Fast Delivery</span>
@@ -364,30 +382,30 @@
             </div>
         </div>
         
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 cursor-pointer hover:opacity-100 transition-opacity" onclick="scrollToSection('stats')">
             <span class="text-xs uppercase tracking-widest">Scroll</span>
             <div class="w-6 h-10 border-2 border-slate-400 rounded-full flex justify-center pt-2">
                 <div class="w-1 h-2 bg-slate-400 rounded-full animate-bounce"></div>
             </div>
         </div>
         </section>
-            <section class="py-20 relative overflow-hidden">
+            <section id="stats" class="py-20 relative overflow-hidden">
         <div class="container mx-auto px-6">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 stagger-children" id="statsSection">
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter" data-target="50">0</div>
+                <div class="text-center cursor-pointer group" onclick="showNotification('50+ Projects Completed Successfully!')">
+                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="50">0</div>
                     <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Projects Completed</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter" data-target="30">0</div>
+                <div class="text-center cursor-pointer group" onclick="showNotification('30+ Happy Clients Worldwide!')">
+                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="30">0</div>
                     <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Happy Clients</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter" data-target="5">0</div>
+                <div class="text-center cursor-pointer group" onclick="showNotification('5+ Years of Experience!')">
+                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="5">0</div>
                     <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Years Experience</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter" data-target="12">0</div>
+                <div class="text-center cursor-pointer group" onclick="showNotification('12 Awards Won!')">
+                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="12">0</div>
                     <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Awards Won</div>
                 </div>
             </div>
@@ -399,8 +417,8 @@
                 <div class="relative reveal-text">
                     <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/30 to-purple-600/30 rounded-3xl blur-3xl"></div>
                     <div class="relative glass rounded-3xl p-2">
-                        <img src="IMG_20260325_033609.png" alt="Sweetu - Workspace" class="rounded-2xl w-full object-cover aspect-[4/3]">
-                        <div class="absolute -bottom-6 -right-6 glass p-6 rounded-2xl">
+                        <img src="IMG_20260325_033609.png" alt="Sweetu - Workspace" class="rounded-2xl w-full object-cover aspect-[4/3] cursor-pointer hover:scale-105 transition-transform" onclick="openImageModal('IMG_20260325_033609.png')">
+                        <div class="absolute -bottom-6 -right-6 glass p-6 rounded-2xl cursor-pointer hover:bg-slate-800 transition-all" onclick="showNotification('5+ Years Experience')">
                             <div class="text-3xl font-bold gradient-text">5+</div>
                             <div class="text-sm text-slate-400">Years Exp.</div>
                         </div>
@@ -417,7 +435,7 @@
                         I'm Sweetu, a passionate freelance designer and developer based in Sheikhupura, Pakistan. With expertise spanning brand identity, UI/UX design, and full-stack development, I bring ideas to life and help businesses grow their digital presence.
                     </p>
                                         <div class="space-y-4 pt-4 reveal-text">
-                        <div>
+                        <div class="cursor-pointer" onclick="showNotification('UI/UX Design: 95% Expertise')">
                             <div class="flex justify-between mb-2">
                                 <span class="font-medium">UI/UX Design</span>
                                 <span class="text-indigo-400">95%</span>
@@ -426,7 +444,7 @@
                                 <div class="skill-bar h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style="--width: 95%"></div>
                             </div>
                         </div>
-                        <div>
+                        <div class="cursor-pointer" onclick="showNotification('Frontend Development: 90% Expertise')">
                             <div class="flex justify-between mb-2">
                                 <span class="font-medium">Frontend Development</span>
                                 <span class="text-indigo-400">90%</span>
@@ -435,7 +453,7 @@
                                 <div class="skill-bar h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style="--width: 90%"></div>
                             </div>
                         </div>
-                        <div>
+                        <div class="cursor-pointer" onclick="showNotification('Brand Identity: 85% Expertise')">
                             <div class="flex justify-between mb-2">
                                 <span class="font-medium">Brand Identity</span>
                                 <span class="text-indigo-400">85%</span>
@@ -444,7 +462,7 @@
                                 <div class="skill-bar h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style="--width: 85%"></div>
                             </div>
                         </div>
-                        <div>
+                        <div class="cursor-pointer" onclick="showNotification('Motion Design: 80% Expertise')">
                             <div class="flex justify-between mb-2">
                                 <span class="font-medium">Motion Design</span>
                                 <span class="text-indigo-400">80%</span>
@@ -456,10 +474,14 @@
                     </div>
                     
                     <div class="flex gap-4 pt-6 reveal-text">
-                        <a href="https://wa.me/923016305418" target="_blank" class="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all flex items-center gap-2">
+                        <a href="https://wa.me/923016305418" target="_blank" class="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all flex items-center gap-2 magnetic-btn">
                             <i data-lucide="message-circle" class="w-4 h-4"></i>
                             WhatsApp Me
                         </a>
+                        <button onclick="downloadCV()" class="px-6 py-3 border border-slate-700 rounded-full hover:bg-slate-800 transition-all flex items-center gap-2 magnetic-btn">
+                            <i data-lucide="download" class="w-4 h-4"></i>
+                            Download CV
+                        </button>
                     </div>
                 </div>
             </div>
@@ -475,7 +497,7 @@
             </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children" id="servicesGrid">
-                                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all cursor-pointer" data-tilt>
+                                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('UI/UX Design')">
                     <div class="tilt-content">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="layout" class="w-7 h-7 text-white"></i>
@@ -487,10 +509,13 @@
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> User Research</li>
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Design Systems</li>
                         </ul>
+                        <button class="mt-4 text-indigo-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all cursor-pointer" data-tilt>
+                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Web Development')">
                     <div class="tilt-content">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="code-2" class="w-7 h-7 text-white"></i>
@@ -502,10 +527,13 @@
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> Node.js & Python</li>
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> CMS Integration</li>
                         </ul>
+                        <button class="mt-4 text-purple-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all cursor-pointer" data-tilt>
+                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Brand Identity')">
                     <div class="tilt-content">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-600 to-rose-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="sparkles" class="w-7 h-7 text-white"></i>
@@ -517,9 +545,12 @@
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Brand Guidelines</li>
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Visual Identity</li>
                         </ul>
+                        <button class="mt-4 text-pink-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                                                                     </div>
-                    <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all cursor-pointer" data-tilt>
+                                                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Motion Design')">
                     <div class="tilt-content">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-600 to-orange-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="play-circle" class="w-7 h-7 text-white"></i>
@@ -531,10 +562,13 @@
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-400"></i> Lottie Animations</li>
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-400"></i> Interaction Design</li>
                         </ul>
+                        <button class="mt-4 text-rose-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all cursor-pointer" data-tilt>
+                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Mobile Apps')">
                     <div class="tilt-content">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-600 to-yellow-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="smartphone" class="w-7 h-7 text-white"></i>
@@ -546,10 +580,13 @@
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-orange-400"></i> React Native</li>
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-orange-400"></i> Flutter</li>
                         </ul>
+                        <button class="mt-4 text-orange-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all cursor-pointer" data-tilt>
+                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('SEO & Strategy')">
                     <div class="tilt-content">
                         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-600 to-green-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                             <i data-lucide="search" class="w-7 h-7 text-white"></i>
@@ -561,12 +598,15 @@
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-yellow-400"></i> Content Strategy</li>
                             <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-yellow-400"></i> Analytics</li>
                         </ul>
+                        <button class="mt-4 text-yellow-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
+                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-                                </section>
-                                    <section id="portfolio" class="py-32 relative">
+                    </section>
+                        <section id="portfolio" class="py-32 relative">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                 <div class="reveal-text">
@@ -574,15 +614,15 @@
                     <h2 class="text-4xl md:text-5xl font-bold mt-2">Selected Works</h2>
                 </div>
                 <div class="flex gap-2 flex-wrap reveal-text">
-                    <button class="filter-btn active px-4 py-2 rounded-full text-sm font-medium bg-indigo-600 text-white transition-all" data-filter="all">All</button>
-                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="web">Web Design</button>
-                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="brand">Branding</button>
-                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="app">App Design</button>
+                    <button class="filter-btn active px-4 py-2 rounded-full text-sm font-medium bg-indigo-600 text-white transition-all" data-filter="all" onclick="filterPortfolio('all', this)">All</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="web" onclick="filterPortfolio('web', this)">Web Design</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="brand" onclick="filterPortfolio('brand', this)">Branding</button>
+                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="app" onclick="filterPortfolio('app', this)">App Design</button>
                 </div>
             </div>
             
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolioGrid">
-                <div class="project-card group relative rounded-3xl overflow-hidden cursor-pointer" data-category="web">
+                <div class="project-card group relative rounded-3xl overflow-hidden" data-category="web" onclick="openProjectModal('FinTech Dashboard', 'Web Design', 'A comprehensive financial analytics platform with real-time data visualization.', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop')">
                     <div class="aspect-[4/3] overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700">
                     </div>
@@ -590,10 +630,11 @@
                         <span class="text-indigo-400 text-sm font-medium mb-2">Web Design</span>
                         <h3 class="text-2xl font-bold mb-2">FinTech Dashboard</h3>
                         <p class="text-slate-400 text-sm mb-4">A comprehensive financial analytics platform with real-time data visualization.</p>
+                        <span class="text-indigo-400 text-sm flex items-center gap-1">View Project <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                     </div>
                 </div>
                 
-                <div class="project-card group relative rounded-3xl overflow-hidden cursor-pointer" data-category="brand">
+                <div class="project-card group relative rounded-3xl overflow-hidden" data-category="brand" onclick="openProjectModal('Aura Cosmetics', 'Branding', 'Complete brand identity for a luxury sustainable cosmetics line.', 'https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop')">
                     <div class="aspect-[4/3] overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop" alt="Project 2" class="w-full h-full object-cover transition-transform duration-700">
                     </div>
@@ -601,10 +642,11 @@
                         <span class="text-purple-400 text-sm font-medium mb-2">Branding</span>
                         <h3 class="text-2xl font-bold mb-2">Aura Cosmetics</h3>
                         <p class="text-slate-400 text-sm mb-4">Complete brand identity for a luxury sustainable cosmetics line.</p>
+                        <span class="text-purple-400 text-sm flex items-center gap-1">View Project <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                     </div>
                 </div>
                 
-                <div class="project-card group relative rounded-3xl overflow-hidden cursor-pointer" data-category="app">
+                <div class="project-card group relative rounded-3xl overflow-hidden" data-category="app" onclick="openProjectModal('HealthTrack Pro', 'App Design', 'Mobile health tracking application with AI-powered insights.', 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop')">
                     <div class="aspect-[4/3] overflow-hidden">
                         <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700">
                     </div>
@@ -612,19 +654,20 @@
                         <span class="text-pink-400 text-sm font-medium mb-2">App Design</span>
                         <h3 class="text-2xl font-bold mb-2">HealthTrack Pro</h3>
                         <p class="text-slate-400 text-sm mb-4">Mobile health tracking application with AI-powered insights.</p>
+                        <span class="text-pink-400 text-sm flex items-center gap-1">View Project <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
                     </div>
                 </div>
             </div>
             
             <div class="text-center mt-12 reveal-text">
-                <button class="magnetic-btn px-8 py-4 border border-slate-700 rounded-full font-semibold hover:bg-slate-800 transition-all inline-flex items-center gap-2">
+                <button onclick="showNotification('More projects coming soon!')" class="magnetic-btn px-8 py-4 border border-slate-700 rounded-full font-semibold hover:bg-slate-800 transition-all inline-flex items-center gap-2">
                     View All Projects
                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                 </button>
             </div>
         </div>
-                                    </section>
-                                        <section class="py-32 relative overflow-hidden">
+                        </section>
+                            <section class="py-32 relative overflow-hidden">
         <div class="blob bg-purple-900/20 w-[500px] h-[500px] rounded-full -left-40 bottom-0"></div>
         <div class="container mx-auto px-6 relative z-10">
             <div class="text-center max-w-2xl mx-auto mb-16 reveal-text">
@@ -636,17 +679,17 @@
                 <div class="glass rounded-3xl p-8 md:p-12" id="testimonialContainer">
                     <div class="testimonial-slide active" data-index="0">
                         <div class="flex flex-col md:flex-row gap-8 items-center">
-                            <div class="relative">
+                            <div class="relative cursor-pointer" onclick="openImageModal('IMG_20260325_033609.png')">
                                 <div class="pulse-ring absolute inset-0"></div>
-                                <img src="IMG_20260325_033609.png" alt="Client" class="w-24 h-24 rounded-full object-cover relative z-10">
+                                <img src="IMG_20260325_033609.png" alt="Client" class="w-24 h-24 rounded-full object-cover relative z-10 hover:scale-110 transition-transform">
                             </div>
                             <div class="flex-1 text-center md:text-left">
                                 <div class="flex justify-center md:justify-start gap-1 mb-4">
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
+                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
+                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
+                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
+                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
                                 </div>
                                 <p class="text-lg md:text-xl text-slate-300 italic mb-6">"Working with Sweetu was an absolute game-changer for our startup. The attention to detail and creative vision transformed our brand completely. Highly recommended!"</p>
                                 <div>
@@ -659,14 +702,14 @@
                 </div>
                 
                 <div class="flex justify-center gap-3 mt-8">
-                    <button class="testimonial-dot w-3 h-3 rounded-full bg-indigo-600 transition-all" data-index="0"></button>
-                    <button class="testimonial-dot w-3 h-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-all" data-index="1"></button>
-                    <button class="testimonial-dot w-3 h-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-all" data-index="2"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-indigo-600 transition-all hover:scale-125" data-index="0" onclick="changeTestimonial(0)"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-all hover:scale-125" data-index="1" onclick="changeTestimonial(1)"></button>
+                    <button class="testimonial-dot w-3 h-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-all hover:scale-125" data-index="2" onclick="changeTestimonial(2)"></button>
                 </div>
             </div>
         </div>
-                                        </section>
-                                            <section id="contact" class="py-32 relative">
+                            </section>
+                                <section id="contact" class="py-32 relative">
         <div class="container mx-auto px-6">
             <div class="grid lg:grid-cols-2 gap-16">
                 <div class="reveal-text">
@@ -675,17 +718,17 @@
                     <p class="text-slate-400 text-lg mb-8">Have a project in mind? I'd love to hear about it. Send me a message and let's discuss how we can bring your vision to life.</p>
                     
                     <div class="space-y-6">
-                        <div class="flex items-center gap-4 group cursor-pointer">
+                        <a href="mailto:sheikhsahibbrand@gmail.com" class="flex items-center gap-4 group cursor-pointer hover:bg-slate-800/50 p-3 rounded-xl transition-all">
                             <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
                                 <i data-lucide="mail" class="w-5 h-5"></i>
                             </div>
                             <div>
                                 <div class="text-sm text-slate-400">Email</div>
-                                <div class="font-semibold">sheikhsahibbrand@gmail.com</div>
+                                <div class="font-semibold group-hover:text-indigo-400 transition-colors">sheikhsahibbrand@gmail.com</div>
                             </div>
-                        </div>
+                        </a>
                         
-                        <div class="flex items-center gap-4 group cursor-pointer">
+                        <div class="flex items-center gap-4 group cursor-pointer hover:bg-slate-800/50 p-3 rounded-xl transition-all" onclick="showNotification('Main Bazar, Sheikhupura, Pakistan')">
                             <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
                                 <i data-lucide="map-pin" class="w-5 h-5"></i>
                             </div>
@@ -695,51 +738,64 @@
                             </div>
                         </div>
                         
-                        <div class="flex items-center gap-4 group cursor-pointer">
+                        <a href="tel:03016305418" class="flex items-center gap-4 group cursor-pointer hover:bg-slate-800/50 p-3 rounded-xl transition-all">
                             <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
                                 <i data-lucide="phone" class="w-5 h-5"></i>
                             </div>
                             <div>
                                 <div class="text-sm text-slate-400">Phone / WhatsApp</div>
-                                <div class="font-semibold">0301-6305418</div>
+                                <div class="font-semibold group-hover:text-indigo-400 transition-colors">0301-6305418</div>
                             </div>
-                        </div>
+                        </a>
                     </div>
                     
                     <div class="flex gap-4 mt-8">
-                        <a href="https://wa.me/923016305418" target="_blank" class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center hover:bg-green-700 transition-all hover:scale-110">
+                        <a href="https://wa.me/923016305418" target="_blank" class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center hover:bg-green-700 transition-all hover:scale-110 magnetic-btn">
                             <i data-lucide="message-circle" class="w-6 h-6 text-white fill-white"></i>
                         </a>
-                        <a href="#" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-600 transition-all hover:scale-110">
+                        <a href="https://facebook.com" target="_blank" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-all hover:scale-110 magnetic-btn">
                             <i data-lucide="facebook" class="w-5 h-5"></i>
                         </a>
-                        <a href="#" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-indigo-600 transition-all hover:scale-110">
+                        <a href="https://instagram.com" target="_blank" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 transition-all hover:scale-110 magnetic-btn">
                             <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="https://linkedin.com" target="_blank" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-700 transition-all hover:scale-110 magnetic-btn">
+                            <i data-lucide="linkedin" class="w-5 h-5"></i>
                         </a>
                     </div>
                 </div>
                 
                 <div class="glass rounded-3xl p-8 reveal-text">
-                    <form id="contactForm" class="space-y-6">
+                    <form id="contactForm" class="space-y-6" onsubmit="handleFormSubmit(event)">
                         <div class="grid md:grid-cols-2 gap-6">
                             <div>
                                 <label class="block text-sm font-medium mb-2">Name</label>
-                                <input type="text" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors" placeholder="Your Name" required>
+                                <input type="text" id="contactName" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors" placeholder="Your Name" required>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium mb-2">Email</label>
-                                <input type="email" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors" placeholder="your@email.com" required>
+                                <input type="email" id="contactEmail" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors" placeholder="your@email.com" required>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium mb-2">Message</label>
-                            <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors resize-none" placeholder="Tell me about your project..." required></textarea>
+                            <label class="block text-sm font-medium mb-2">Project Type</label>
+                            <select id="projectType" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors cursor-pointer">
+                                <option value="Web Design">Web Design</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Brand Identity">Brand Identity</option>
+                                <option value="Mobile App">Mobile App</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
-                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 group">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Message</label>
+                            <textarea id="contactMessage" rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors resize-none" placeholder="Tell me about your project..." required></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 group magnetic-btn">
                             <span>Send Message</span>
                             <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
                         </button>
-                        <a href="https://wa.me/923016305418" target="_blank" class="w-full py-4 bg-green-600 rounded-xl font-semibold hover:bg-green-700 transition-all flex items-center justify-center gap-2 group">
+                        <a href="https://wa.me/923016305418" target="_blank" class="w-full py-4 bg-green-600 rounded-xl font-semibold hover:bg-green-700 transition-all flex items-center justify-center gap-2 group magnetic-btn">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                             <span>Or Chat on WhatsApp</span>
                         </a>
@@ -747,23 +803,58 @@
                 </div>
             </div>
         </div>
-                            </section>
-        <footer class="py-12 border-t border-slate-800">
+                                </section>
+                                    <footer class="py-12 border-t border-slate-800">
         <div class="container mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="text-2xl font-bold gradient-text tracking-tighter">SWEETU</div>
+                <a href="#" class="text-2xl font-bold gradient-text tracking-tighter cursor-pointer" onclick="window.scrollTo(0,0); return false;">SWEETU</a>
                 <div class="text-slate-400 text-sm">© 2026 Sweetu. All rights reserved.</div>
                 <div class="flex gap-6 text-sm">
-                    <a href="#" class="text-slate-400 hover:text-white transition-colors">Privacy</a>
-                    <a href="#" class="text-slate-400 hover:text-white transition-colors">Terms</a>
+                    <button onclick="showNotification('Privacy Policy coming soon!')" class="text-slate-400 hover:text-white transition-colors">Privacy</button>
+                    <button onclick="showNotification('Terms of Service coming soon!')" class="text-slate-400 hover:text-white transition-colors">Terms</button>
                 </div>
             </div>
         </div>
     </footer>
 
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal" onclick="closeImageModal()">
+        <div class="modal-content p-4" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition-colors z-10">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <img id="modalImage" src="" alt="Full view" class="w-full rounded-xl">
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div id="projectModal" class="modal" onclick="closeProjectModal()">
+        <div class="modal-content p-6" onclick="event.stopPropagation()">
+            <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition-colors z-10">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <img id="projectModalImage" src="" alt="Project" class="w-full h-64 object-cover rounded-xl mb-4">
+            <span id="projectModalCategory" class="text-indigo-400 text-sm font-medium"></span>
+            <h3 id="projectModalTitle" class="text-2xl font-bold mt-2 mb-3"></h3>
+            <p id="projectModalDesc" class="text-slate-400 mb-6"></p>
+            <a href="https://wa.me/923016305418" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 rounded-xl font-semibold hover:bg-green-700 transition-all">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                Discuss Project on WhatsApp
+            </a>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="fixed top-24 right-6 bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 z-[10001] flex items-center gap-2">
+        <i data-lucide="info" class="w-5 h-5"></i>
+        <span id="notificationText"></span>
+    </div>
+
     <script>
+        // Initialize Lucide Icons
         lucide.createIcons();
-        
+
+        // Custom Cursor
         const cursor = document.getElementById('cursor');
         let mouseX = 0, mouseY = 0;
         let cursorX = 0, cursorY = 0;
@@ -782,12 +873,196 @@
         }
         animateCursor();
         
-        const interactiveElements = document.querySelectorAll('a, button, .project-card, .tilt-card');
+        const interactiveElements = document.querySelectorAll('a, button, .project-card, .tilt-card, [onclick]');
         interactiveElements.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
         });
+
+        // Scroll Functions
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
         
+        function closeMobileMenu() {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        }
+
+        // Notification System
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            text.textContent = message;
+            notification.classList.remove('translate-x-full');
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        // Image Modal
+        function openImageModal(src) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('imageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Project Modal
+        function openProjectModal(title, category, desc, image) {
+            document.getElementById('projectModalTitle').textContent = title;
+            document.getElementById('projectModalCategory').textContent = category;
+            document.getElementById('projectModalDesc').textContent = desc;
+            document.getElementById('projectModalImage').src = image;
+            document.getElementById('projectModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Service Detail
+        function showServiceDetail(service) {
+            showNotification(`${service} - Contact me on WhatsApp for details!`);
+        }
+
+        // Portfolio Filter
+        function filterPortfolio(filter, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active', 'bg-indigo-600', 'text-white');
+                b.classList.add('bg-slate-800', 'text-slate-400');
+            });
+            btn.classList.add('active', 'bg-indigo-600', 'text-white');
+            btn.classList.remove('bg-slate-800', 'text-slate-400');
+            
+            const items = document.querySelectorAll('.project-card');
+            items.forEach(item => {
+                if (filter === 'all' || item.getAttribute('data-category') === filter) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 10);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // Testimonials
+        const testimonials = [
+            {
+                text: '"Working with Sweetu was an absolute game-changer for our startup. The attention to detail and creative vision transformed our brand completely. Highly recommended!"',
+                name: 'Ahmed Khan',
+                role: 'CEO, Sheikhupura Tech'
+            },
+            {
+                text: '"The level of professionalism and creativity exceeded all expectations. Our new website has increased conversions by 150% since launch. Great work from Sheikhupura!"',
+                name: 'Muhammad Ali',
+                role: 'Founder, Local Business'
+            },
+            {
+                text: '"Exceptional work on our mobile app design. The user experience is intuitive and beautiful. Highly recommended for anyone in Sheikhupura looking for quality design work."',
+                name: 'Bilal Hassan',
+                role: 'Product Lead, Startup'
+            }
+        ];
+
+        function changeTestimonial(index) {
+            const container = document.getElementById('testimonialContainer');
+            const t = testimonials[index];
+            container.innerHTML = `
+                <div class="testimonial-slide active" data-index="${index}">
+                    <div class="flex flex-col md:flex-row gap-8 items-center">
+                        <div class="relative cursor-pointer" onclick="openImageModal('IMG_20260325_033609.png')">
+                            <div class="pulse-ring absolute inset-0"></div>
+                            <img src="IMG_20260325_033609.png" alt="Client" class="w-24 h-24 rounded-full object-cover relative z-10 hover:scale-110 transition-transform">
+                        </div>
+                        <div class="flex-1 text-center md:text-left">
+                            <div class="flex justify-center md:justify-start gap-1 mb-4">
+                                ${[1,2,3,4,5].map(() => '<i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification(\'5 Star Rating!\')"></i>').join('')}
+                            </div>
+                            <p class="text-lg md:text-xl text-slate-300 italic mb-6">${t.text}</p>
+                            <div>
+                                <div class="font-bold text-white">${t.name}</div>
+                                <div class="text-slate-400 text-sm">${t.role}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+            
+            document.querySelectorAll('.testimonial-dot').forEach((d, i) => {
+                if (i === index) {
+                    d.classList.remove('bg-slate-700');
+                    d.classList.add('bg-indigo-600');
+                } else {
+                    d.classList.add('bg-slate-700');
+                    d.classList.remove('bg-indigo-600');
+                }
+            });
+        }
+
+        // Form Handling
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.innerHTML = '<div class="loader w-5 h-5"></div>';
+            btn.disabled = true;
+            
+            const name = document.getElementById('contactName').value;
+            const email = document.getElementById('contactEmail').value;
+            const type = document.getElementById('projectType').value;
+            const message = document.getElementById('contactMessage').value;
+            
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i> Message Sent!';
+                btn.classList.remove('from-indigo-600', 'to-purple-600');
+                btn.classList.add('bg-green-600');
+                lucide.createIcons();
+                showNotification(`Thanks ${name}! Your message has been sent.`);
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.classList.add('from-indigo-600', 'to-purple-600');
+                    btn.classList.remove('bg-green-600');
+                    btn.disabled = false;
+                    e.target.reset();
+                    lucide.createIcons();
+                }, 3000);
+            }, 1500);
+        }
+
+        // Download CV
+        function downloadCV() {
+            showNotification('CV Download started!');
+            setTimeout(() => {
+                const link = document.createElement('a');
+                link.href = 'data:text/plain;charset=utf-8,Sweetu - Creative Designer & Developer\n\nContact: sheikhsahibbrand@gmail.com\nPhone: 0301-6305418\nLocation: Main Bazar, Sheikhupura\n\nSkills:\n- UI/UX Design (95%)\n- Frontend Development (90%)\n- Brand Identity (85%)\n- Motion Design (80%)';
+                link.download = 'Sweetu_CV.txt';
+                link.click();
+            }, 1000);
+        }
+
+        // Intersection Observer for Animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -827,7 +1102,8 @@
                 }
             }, 30);
         }
-        
+
+        // 3D Tilt Effect
         const tiltCards = document.querySelectorAll('[data-tilt]');
         tiltCards.forEach(card => {
             card.addEventListener('mousemove', (e) => {
@@ -844,78 +1120,8 @@
                 card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
             });
         });
-        
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const portfolioItems = document.querySelectorAll('.project-card');
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterBtns.forEach(b => {
-                    b.classList.remove('active', 'bg-indigo-600', 'text-white');
-                    b.classList.add('bg-slate-800', 'text-slate-400');
-                });
-                btn.classList.add('active', 'bg-indigo-600', 'text-white');
-                btn.classList.remove('bg-slate-800', 'text-slate-400');
-                const filter = btn.getAttribute('data-filter');
-                portfolioItems.forEach(item => {
-                    if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                        item.style.display = 'block';
-                        setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'scale(1)';
-                        }, 10);
-                    } else {
-                        item.style.opacity = '0';
-                        item.style.transform = 'scale(0.8)';
-                        setTimeout(() => {
-                            item.style.display = 'none';
-                        }, 300);
-                    }
-                });
-            });
-        });
-        
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-                document.getElementById('mobileMenu').classList.add('hidden');
-            });
-        });
-        
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-        
-        document.getElementById('contactForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<div class="loader w-5 h-5"></div>';
-            btn.disabled = true;
-            setTimeout(() => {
-                btn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i> Message Sent!';
-                btn.classList.remove('from-indigo-600', 'to-purple-600');
-                btn.classList.add('bg-green-600');
-                lucide.createIcons();
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.classList.add('from-indigo-600', 'to-purple-600');
-                    btn.classList.remove('bg-green-600');
-                    btn.disabled = false;
-                    e.target.reset();
-                    lucide.createIcons();
-                }, 3000);
-            }, 1500);
-        });
-        
+
+        // Magnetic Buttons
         const magneticBtns = document.querySelectorAll('.magnetic-btn');
         magneticBtns.forEach(btn => {
             btn.addEventListener('mousemove', (e) => {
@@ -928,7 +1134,38 @@
                 btn.style.transform = 'translate(0, 0)';
             });
         });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 100) {
+                navbar.classList.add('shadow-lg', 'shadow-indigo-500/10');
+            } else {
+                navbar.classList.remove('shadow-lg', 'shadow-indigo-500/10');
+            }
+        });
+
+        // Parallax Blobs
+        document.addEventListener('mousemove', (e) => {
+            const blobs = document.querySelectorAll('.blob');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            blobs.forEach((blob, index) => {
+                const speed = (index + 1) * 20;
+                const xOffset = (0.5 - x) * speed;
+                const yOffset = (0.5 - y) * speed;
+                blob.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
+            });
+        });
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeImageModal();
+                closeProjectModal();
+            }
+        });
     </script>
 </body>
     </html>
-        
+    
