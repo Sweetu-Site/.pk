@@ -1,1171 +1,1091 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="ur" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sweetu | Creative Freelance Portfolio</title>
+    <title>Sweetu - Premium Website Solutions</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#8b5cf6',
+                        secondary: '#ec4899',
+                        accent: '#06b6d4',
+                    }
+                }
+            }
+        }
+    </script>
     
     <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #ec4899;
-            --accent: #8b5cf6;
-            --dark: #0f172a;
-            --light: #f8fafc;
+        body { background: #0f172a; overflow-x: hidden; font-family: 'Poppins', sans-serif; }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--primary), var(--secondary));
-            border-radius: 4px;
-        }
-        
         .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #667eea 100%);
-            background-size: 400% 400%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 8s ease infinite;
         }
+        .gradient-bg {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        }
+        .jazzcash-gradient {
+            background: linear-gradient(135deg, #9d174d 0%, #be185d 50%, #db2777 100%);
+        }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .card-hover { transition: all 0.3s ease; }
+        .card-hover:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3); }
+        .price-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .price-card.featured {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
+            border: 2px solid #8b5cf6;
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) { .price-card.featured { transform: scale(1); } }
         
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        .float {
-            animation: float 6s ease-in-out infinite;
-        }
+        /* Floating Animation */
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
+        .animate-float { animation: float 6s ease-in-out infinite; }
         
-        .blob {
-            position: absolute;
-            filter: blur(80px);
-            opacity: 0.6;
-            animation: blobMove 20s infinite alternate;
+        /* Pulse Glow */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.8); }
         }
-        @keyframes blobMove {
-            0% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-            100% { transform: translate(0, 0) scale(1); }
-        }
+        .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
         
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Shimmer Effect */
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
         }
-        
-        .glass-dark {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-                .project-card {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-        }
-        .project-card:hover .project-overlay {
-            opacity: 1;
-        }
-        .project-card:hover img {
-            transform: scale(1.1);
-        }
-        
-        .magnetic-btn {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-        }
-        
-        .reveal-text {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .reveal-text.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .stagger-children > * {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        .stagger-children.active > * {
-            opacity: 1;
-            transform: translateY(0);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .stagger-children.active > *:nth-child(1) { transition-delay: 0.1s; }
-        .stagger-children.active > *:nth-child(2) { transition-delay: 0.2s; }
-        .stagger-children.active > *:nth-child(3) { transition-delay: 0.3s; }
-        .stagger-children.active > *:nth-child(4) { transition-delay: 0.4s; }
-        
-        .skill-bar {
-            width: 0;
-            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .skill-bar.active {
-            width: var(--width);
-        }
-        
-        .cursor-follower {
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(99, 102, 241, 0.5);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s, width 0.3s, height 0.3s;
-            mix-blend-mode: difference;
-        }
-        .cursor-follower.hovering {
-            width: 50px;
-            height: 50px;
-            background: rgba(99, 102, 241, 0.1);
-            }
-                .noise {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9998;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-        
-        .parallax-layer {
-            will-change: transform;
-        }
-        
-        .custom-checkbox:checked + div {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-color: transparent;
-        }
-        
-        .loader {
-            border: 3px solid rgba(255,255,255,0.1);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .tilt-card {
-            transform-style: preserve-3d;
-            transition: transform 0.1s;
-            cursor: pointer;
-        }
-        .tilt-content {
-            transform: translateZ(50px);
-        }
-        
-        .pulse-ring {
-            position: absolute;
-            border: 2px solid rgba(99, 102, 241, 0.5);
-            border-radius: 50%;
-            animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulseRing {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(1.5); opacity: 0; }
-        }
-        
-        .nav-link {
-            position: relative;
-            cursor: pointer;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.3s;
-        }
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
-                                                   }
-                .testimonial-slide {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .counter {
-            font-variant-numeric: tabular-nums;
-        }
-        
-        .morph-bg {
-            animation: morph 15s ease-in-out infinite;
-        }
-        @keyframes morph {
-            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
-            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
-        }
-
-        .whatsapp-pulse {
-            animation: whatsappPulse 2s infinite;
-        }
-        @keyframes whatsappPulse {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 10000;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .modal.active {
-            display: flex;
-        }
-        .modal-content {
-            background: #1e293b;
-            border-radius: 20px;
-            max-width: 900px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 overflow-x-hidden selection:bg-indigo-500 selection:text-white">
+<body class="text-white antialiased">
+        <!-- Firebase Initialization -->
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCwat0gj6c6o52J-Z53R3poUsX137T9BLw",
+            authDomain: "sweetu-sites.firebaseapp.com",
+            projectId: "sweetu-sites",
+            storageBucket: "sweetu-sites.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef123456"
+        };
 
-    <div class="noise"></div>
-    <div class="cursor-follower hidden md:block" id="cursor"></div>
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
 
-    <a href="https://wa.me/923016305418" target="_blank" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg whatsapp-pulse hover:scale-110 transition-transform group">
-        <i data-lucide="message-circle" class="w-7 h-7 text-white fill-white"></i>
-        <span class="absolute right-16 bg-white text-slate-900 px-3 py-1 rounded-lg text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Chat on WhatsApp</span>
-    </a>
+        // Global Variables
+        let currentUser = null;
 
-    <nav class="fixed w-full z-50 transition-all duration-500" id="navbar">
-        <div class="glass-dark mx-4 mt-4 rounded-2xl px-6 py-4 max-w-7xl mx-auto">
-            <div class="flex items-center justify-between">
-                <a href="#" class="text-2xl font-bold gradient-text tracking-tighter" onclick="window.scrollTo(0,0); return false;">SWEETU</a>
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#home" class="nav-link text-sm font-medium hover:text-indigo-400 transition-colors">Home</a>
-                    <a href="#about" class="nav-link text-sm font-medium hover:text-indigo-400 transition-colors">About</a>
-                    <a href="#services" class="nav-link text-sm font-medium hover:text-indigo-400 transition-colors">Services</a>
-                    <a href="#portfolio" class="nav-link text-sm font-medium hover:text-indigo-400 transition-colors">Portfolio</a>
-                    <a href="#contact" class="magnetic-btn px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full text-sm font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all">Let's Talk</a>
+        // Check Auth State
+        auth.onAuthStateChanged((user) => {
+            currentUser = user;
+            updateUIForUser();
+        });
+
+        function updateUIForUser() {
+            const loginBtn = document.getElementById('loginBtn');
+            const signupBtn = document.getElementById('signupBtn');
+            const userMenu = document.getElementById('userMenu');
+            
+            if (currentUser) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (signupBtn) signupBtn.style.display = 'none';
+                if (userMenu) {
+                    userMenu.style.display = 'flex';
+                    document.getElementById('userEmail').textContent = currentUser.email;
+                }
+            } else {
+                if (loginBtn) loginBtn.style.display = 'block';
+                if (signupBtn) signupBtn.style.display = 'block';
+                if (userMenu) userMenu.style.display = 'none';
+            }
+        }
+    </script>
+        <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2 cursor-pointer" onclick="showPage('home')">
+                    <div class="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center pulse-glow">
+                        <i class="fas fa-heart text-white text-xl"></i>
+                    </div>
+                    <span class="text-3xl font-bold tracking-tight">
+                        Sweet<span class="gradient-text">u</span>
+                    </span>
                 </div>
-                <button class="md:hidden" id="mobileMenuBtn" onclick="toggleMobileMenu()">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a onclick="showPage('home')" class="cursor-pointer text-gray-300 hover:text-white transition-colors font-medium">Home</a>
+                    <a onclick="showPage('about')" class="cursor-pointer text-gray-300 hover:text-white transition-colors font-medium">About</a>
+                    <a onclick="showPage('contact')" class="cursor-pointer text-gray-300 hover:text-white transition-colors font-medium">Contact</a>
+                </div>
+
+                <!-- Auth Buttons -->
+                <div class="hidden md:flex items-center space-x-4" id="authButtons">
+                    <button id="loginBtn" onclick="openModal('login')" class="px-6 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all text-sm font-medium">
+                        Login
+                    </button>
+                    <button id="signupBtn" onclick="openModal('signup')" class="px-6 py-2 rounded-full gradient-bg text-white text-sm font-medium shadow-lg hover:shadow-purple-500/50 transition-all">
+                        Sign Up
+                    </button>
+                    
+                    <!-- User Menu (Hidden by default) -->
+                    <div id="userMenu" class="hidden items-center gap-3">
+                        <span id="userEmail" class="text-sm text-gray-300"></span>
+                        <button onclick="logout()" class="px-4 py-2 rounded-full bg-red-500/20 text-red-400 text-sm hover:bg-red-500/30 transition-all">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden text-2xl" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
                 </button>
             </div>
         </div>
-        <div class="hidden md:hidden glass-dark mx-4 mt-2 rounded-2xl p-6" id="mobileMenu">
-            <div class="flex flex-col gap-4">
-                <a href="#home" class="text-lg font-medium" onclick="closeMobileMenu()">Home</a>
-                <a href="#about" class="text-lg font-medium" onclick="closeMobileMenu()">About</a>
-                <a href="#services" class="text-lg font-medium" onclick="closeMobileMenu()">Services</a>
-                <a href="#portfolio" class="text-lg font-medium" onclick="closeMobileMenu()">Portfolio</a>
-                <a href="#contact" class="text-lg font-medium text-indigo-400" onclick="closeMobileMenu()">Contact</a>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden glass border-t border-white/10">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a onclick="showPage('home'); toggleMobileMenu()" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Home</a>
+                <a onclick="showPage('about'); toggleMobileMenu()" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">About</a>
+                <a onclick="showPage('contact'); toggleMobileMenu()" class="block px-3 py-2 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg">Contact</a>
+                <div class="pt-4 space-y-2" id="mobileAuthButtons">
+                    <button onclick="openModal('login')" class="w-full px-4 py-2 rounded-lg border border-white/20 text-center">Login</button>
+                    <button onclick="openModal('signup')" class="w-full px-4 py-2 rounded-lg gradient-bg text-center">Sign Up</button>
+                </div>
             </div>
         </div>
     </nav>
-        <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-        <div class="blob bg-indigo-600 w-96 h-96 rounded-full top-20 -left-20" style="animation-delay: 0s;"></div>
-        <div class="blob bg-purple-600 w-80 h-80 rounded-full bottom-20 right-10" style="animation-delay: -5s;"></div>
-        <div class="blob bg-pink-600 w-64 h-64 rounded-full top-1/2 left-1/2" style="animation-delay: -10s;"></div>
-        
-        <div class="container mx-auto px-6 relative z-10">
+        <!-- HOME PAGE -->
+    <section id="home" class="page-section min-h-screen pt-20">
+        <!-- Hero Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div class="space-y-8">
-                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm font-medium text-indigo-300 reveal-text cursor-pointer" onclick="showNotification('Available for projects!')">
-                        <span class="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></span>
-                        Available for freelance work
+                <!-- Left Content -->
+                <div class="space-y-8 reveal">
+                    <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass text-sm text-purple-300 border border-purple-500/30">
+                        <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+                        <span>Premium Web Solutions</span>
                     </div>
                     
-                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold leading-none reveal-text">
-                        Crafting <br>
-                        <span class="gradient-text">Digital</span><br>
-                        Experiences
+                    <h1 class="text-5xl md:text-7xl font-bold leading-tight">
+                        Create Your <br>
+                        <span class="gradient-text" id="typewriter">Dream Website</span>
+                        <span class="animate-pulse">|</span>
                     </h1>
                     
-                    <p class="text-lg md:text-xl text-slate-400 max-w-lg reveal-text" style="transition-delay: 0.2s;">
-                        I'm a multidisciplinary designer & developer creating immersive web experiences that blend aesthetics with functionality.
+                    <p class="text-xl text-gray-400 max-w-lg leading-relaxed">
+                        Professional websites banwayein aur online apni pehchan banayein. 3 pages ka complete package sirf <span class="text-pink-400 font-bold">₨6,499</span> mein!
                     </p>
+
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="showPage('contact')" class="px-8 py-4 rounded-full gradient-bg text-white font-semibold shadow-lg hover:shadow-purple-500/60 transition-all transform hover:scale-105 flex items-center gap-2">
+                            <span>Order Now</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button onclick="showPage('about')" class="px-8 py-4 rounded-full glass border border-white/20 text-white font-semibold hover:bg-white/10 transition-all flex items-center gap-2">
+                            <i class="fas fa-play-circle"></i>
+                            <span>Learn More</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-6 pt-4 text-sm text-gray-500">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                            <span>24/7 Support</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                            <span>100% Responsive</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-check-circle text-green-400"></i>
+                            <span>Fast Delivery</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Content - Animated Illustration -->
+                <div class="relative lg:h-[600px] flex items-center justify-center reveal">
+                    <div class="absolute w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
+                    <div class="absolute w-72 h-72 bg-pink-500/30 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s;"></div>
                     
-                    <div class="flex flex-wrap gap-4 reveal-text" style="transition-delay: 0.3s;">
-                        <button onclick="scrollToSection('portfolio')" class="magnetic-btn group px-8 py-4 bg-white text-slate-900 rounded-full font-semibold flex items-center gap-2 hover:shadow-2xl hover:shadow-white/20 transition-all">
-                            View Work
-                            <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
-                        </button>
-                        <a href="https://wa.me/923016305418" target="_blank" class="magnetic-btn px-8 py-4 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-all flex items-center gap-2">
-                            <i data-lucide="message-circle" class="w-5 h-5"></i>
-                            WhatsApp Me
-                        </a>
-                    </div>
-                    
-                    <div class="flex items-center gap-6 pt-8 reveal-text" style="transition-delay: 0.4s;">
-                        <div class="flex -space-x-3 cursor-pointer" onclick="showNotification('50+ Happy Clients Worldwide!')">
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 border-2 border-slate-950 flex items-center justify-center text-xs font-bold">5★</div>
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 border-2 border-slate-950 flex items-center justify-center text-xs font-bold">50+</div>
-                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 border-2 border-slate-950 flex items-center justify-center text-xs font-bold">100%</div>
-                        </div>
-                        <div class="text-sm text-slate-400">
-                            <span class="text-white font-semibold">50+ Happy Clients</span><br>
-                            Worldwide
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="relative float">
-                    <div class="relative w-full aspect-square max-w-lg mx-auto">
-                        <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-3xl morph-bg"></div>
-                        <div class="absolute inset-4 glass rounded-2xl overflow-hidden cursor-pointer" onclick="openImageModal('IMG_20260325_033609.png')">
-                            <img src="IMG_20260325_033609.png" alt="Sweetu - Creative Professional" class="w-full h-full object-cover opacity-90 hover:scale-110 transition-transform duration-700">
-                        </div>
-                        <div class="absolute -top-6 -right-6 glass px-4 py-3 rounded-xl animate-bounce cursor-pointer hover:bg-slate-800 transition-all" style="animation-duration: 3s;" onclick="showNotification('UI/UX Design Expert')">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="palette" class="w-5 h-5 text-pink-400"></i>
-                                <span class="text-sm font-semibold">UI/UX Design</span>
-                            </div>
-                        </div>
-                        <div class="absolute -bottom-6 -left-6 glass px-4 py-3 rounded-xl animate-bounce cursor-pointer hover:bg-slate-800 transition-all" style="animation-duration: 4s;" onclick="showNotification('Full Stack Developer')">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="code-2" class="w-5 h-5 text-indigo-400"></i>
-                                <span class="text-sm font-semibold">Full Stack Dev</span>
-                            </div>
-                        </div>
-                        <div class="absolute top-1/2 -right-12 glass px-4 py-3 rounded-xl hidden lg:block cursor-pointer hover:bg-slate-800 transition-all" onclick="showNotification('Fast Delivery Guaranteed')">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="zap" class="w-5 h-5 text-yellow-400"></i>
-                                <span class="text-sm font-semibold">Fast Delivery</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 cursor-pointer hover:opacity-100 transition-opacity" onclick="scrollToSection('stats')">
-            <span class="text-xs uppercase tracking-widest">Scroll</span>
-            <div class="w-6 h-10 border-2 border-slate-400 rounded-full flex justify-center pt-2">
-                <div class="w-1 h-2 bg-slate-400 rounded-full animate-bounce"></div>
-            </div>
-        </div>
-        </section>
-            <section id="stats" class="py-20 relative overflow-hidden">
-        <div class="container mx-auto px-6">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 stagger-children" id="statsSection">
-                <div class="text-center cursor-pointer group" onclick="showNotification('50+ Projects Completed Successfully!')">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="50">0</div>
-                    <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Projects Completed</div>
-                </div>
-                <div class="text-center cursor-pointer group" onclick="showNotification('30+ Happy Clients Worldwide!')">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="30">0</div>
-                    <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Happy Clients</div>
-                </div>
-                <div class="text-center cursor-pointer group" onclick="showNotification('5+ Years of Experience!')">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="5">0</div>
-                    <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Years Experience</div>
-                </div>
-                <div class="text-center cursor-pointer group" onclick="showNotification('12 Awards Won!')">
-                    <div class="text-4xl md:text-5xl font-bold gradient-text counter group-hover:scale-110 transition-transform" data-target="12">0</div>
-                    <div class="text-slate-400 mt-2 text-sm uppercase tracking-wider">Awards Won</div>
-                </div>
-            </div>
-        </div>
-            </section>
-                <section id="about" class="py-32 relative">
-        <div class="container mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-16 items-center">
-                <div class="relative reveal-text">
-                    <div class="absolute inset-0 bg-gradient-to-br from-indigo-600/30 to-purple-600/30 rounded-3xl blur-3xl"></div>
-                    <div class="relative glass rounded-3xl p-2">
-                        <img src="IMG_20260325_033609.png" alt="Sweetu - Workspace" class="rounded-2xl w-full object-cover aspect-[4/3] cursor-pointer hover:scale-105 transition-transform" onclick="openImageModal('IMG_20260325_033609.png')">
-                        <div class="absolute -bottom-6 -right-6 glass p-6 rounded-2xl cursor-pointer hover:bg-slate-800 transition-all" onclick="showNotification('5+ Years Experience')">
-                            <div class="text-3xl font-bold gradient-text">5+</div>
-                            <div class="text-sm text-slate-400">Years Exp.</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="space-y-6">
-                    <div class="reveal-text">
-                        <span class="text-indigo-400 font-semibold uppercase tracking-wider text-sm">About Me</span>
-                        <h2 class="text-4xl md:text-5xl font-bold mt-2">Designing the future,<br>one pixel at a time</h2>
-                    </div>
-                    
-                    <p class="text-slate-400 text-lg leading-relaxed reveal-text">
-                        I'm Sweetu, a passionate freelance designer and developer based in Sheikhupura, Pakistan. With expertise spanning brand identity, UI/UX design, and full-stack development, I bring ideas to life and help businesses grow their digital presence.
-                    </p>
-                                        <div class="space-y-4 pt-4 reveal-text">
-                        <div class="cursor-pointer" onclick="showNotification('UI/UX Design: 95% Expertise')">
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">UI/UX Design</span>
-                                <span class="text-indigo-400">95%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                <div class="skill-bar h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style="--width: 95%"></div>
-                            </div>
-                        </div>
-                        <div class="cursor-pointer" onclick="showNotification('Frontend Development: 90% Expertise')">
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Frontend Development</span>
-                                <span class="text-indigo-400">90%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                <div class="skill-bar h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style="--width: 90%"></div>
-                            </div>
-                        </div>
-                        <div class="cursor-pointer" onclick="showNotification('Brand Identity: 85% Expertise')">
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Brand Identity</span>
-                                <span class="text-indigo-400">85%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                <div class="skill-bar h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style="--width: 85%"></div>
-                            </div>
-                        </div>
-                        <div class="cursor-pointer" onclick="showNotification('Motion Design: 80% Expertise')">
-                            <div class="flex justify-between mb-2">
-                                <span class="font-medium">Motion Design</span>
-                                <span class="text-indigo-400">80%</span>
-                            </div>
-                            <div class="h-2 bg-slate-800 rounded-full overflow-hidden">
-                                <div class="skill-bar h-full bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full" style="--width: 80%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-4 pt-6 reveal-text">
-                        <a href="https://wa.me/923016305418" target="_blank" class="px-6 py-3 bg-green-600 text-white rounded-full hover:bg-green-700 transition-all flex items-center gap-2 magnetic-btn">
-                            <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            WhatsApp Me
-                        </a>
-                        <button onclick="downloadCV()" class="px-6 py-3 border border-slate-700 rounded-full hover:bg-slate-800 transition-all flex items-center gap-2 magnetic-btn">
-                            <i data-lucide="download" class="w-4 h-4"></i>
-                            Download CV
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-                </section>
-                    <section id="services" class="py-32 relative overflow-hidden">
-        <div class="blob bg-indigo-900/30 w-[600px] h-[600px] rounded-full -right-40 top-0"></div>
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="text-center max-w-2xl mx-auto mb-16 reveal-text">
-                <span class="text-indigo-400 font-semibold uppercase tracking-wider text-sm">Services</span>
-                <h2 class="text-4xl md:text-5xl font-bold mt-2 mb-4">What I Can Do For You</h2>
-                <p class="text-slate-400">From concept to launch, I provide end-to-end digital solutions tailored to your unique needs.</p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 stagger-children" id="servicesGrid">
-                                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('UI/UX Design')">
-                    <div class="tilt-content">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <i data-lucide="layout" class="w-7 h-7 text-white"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">UI/UX Design</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Creating intuitive, user-centered interfaces that delight users and drive conversions.</p>
-                        <ul class="space-y-2 text-sm text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Wireframing & Prototyping</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> User Research</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-indigo-400"></i> Design Systems</li>
-                        </ul>
-                        <button class="mt-4 text-indigo-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Web Development')">
-                    <div class="tilt-content">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <i data-lucide="code-2" class="w-7 h-7 text-white"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Web Development</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Building fast, responsive, and scalable web applications with modern technologies.</p>
-                        <ul class="space-y-2 text-sm text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> React & Next.js</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> Node.js & Python</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-purple-400"></i> CMS Integration</li>
-                        </ul>
-                        <button class="mt-4 text-purple-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Brand Identity')">
-                    <div class="tilt-content">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-pink-600 to-rose-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <i data-lucide="sparkles" class="w-7 h-7 text-white"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Brand Identity</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Crafting memorable brand experiences that resonate with your target audience.</p>
-                        <ul class="space-y-2 text-sm text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Logo Design</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Brand Guidelines</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Visual Identity</li>
-                        </ul>
-                        <button class="mt-4 text-pink-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                                                                    </div>
-                                                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Motion Design')">
-                    <div class="tilt-content">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-600 to-orange-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <i data-lucide="play-circle" class="w-7 h-7 text-white"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Motion Design</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Bringing interfaces to life with purposeful animations and micro-interactions.</p>
-                        <ul class="space-y-2 text-sm text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-400"></i> UI Animation</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-400"></i> Lottie Animations</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-rose-400"></i> Interaction Design</li>
-                        </ul>
-                        <button class="mt-4 text-rose-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('Mobile Apps')">
-                    <div class="tilt-content">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-600 to-yellow-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <i data-lucide="smartphone" class="w-7 h-7 text-white"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">Mobile Apps</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Designing and developing native and cross-platform mobile applications.</p>
-                        <ul class="space-y-2 text-sm text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-orange-400"></i> iOS & Android</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-orange-400"></i> React Native</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-orange-400"></i> Flutter</li>
-                        </ul>
-                        <button class="mt-4 text-orange-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="tilt-card group relative glass rounded-3xl p-8 hover:bg-slate-800/50 transition-all" data-tilt onclick="showServiceDetail('SEO & Strategy')">
-                    <div class="tilt-content">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-600 to-green-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                            <i data-lucide="search" class="w-7 h-7 text-white"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-3">SEO & Strategy</h3>
-                        <p class="text-slate-400 text-sm leading-relaxed mb-4">Optimizing your digital presence for maximum visibility and growth.</p>
-                        <ul class="space-y-2 text-sm text-slate-500">
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-yellow-400"></i> Technical SEO</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-yellow-400"></i> Content Strategy</li>
-                            <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-yellow-400"></i> Analytics</li>
-                        </ul>
-                        <button class="mt-4 text-yellow-400 text-sm font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                            Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-                    </section>
-                        <section id="portfolio" class="py-32 relative">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
-                <div class="reveal-text">
-                    <span class="text-indigo-400 font-semibold uppercase tracking-wider text-sm">Portfolio</span>
-                    <h2 class="text-4xl md:text-5xl font-bold mt-2">Selected Works</h2>
-                </div>
-                <div class="flex gap-2 flex-wrap reveal-text">
-                    <button class="filter-btn active px-4 py-2 rounded-full text-sm font-medium bg-indigo-600 text-white transition-all" data-filter="all" onclick="filterPortfolio('all', this)">All</button>
-                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="web" onclick="filterPortfolio('web', this)">Web Design</button>
-                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="brand" onclick="filterPortfolio('brand', this)">Branding</button>
-                    <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-slate-800 text-slate-400 hover:bg-slate-700 transition-all" data-filter="app" onclick="filterPortfolio('app', this)">App Design</button>
-                </div>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolioGrid">
-                <div class="project-card group relative rounded-3xl overflow-hidden" data-category="web" onclick="openProjectModal('FinTech Dashboard', 'Web Design', 'A comprehensive financial analytics platform with real-time data visualization.', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop')">
-                    <div class="aspect-[4/3] overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop" alt="Project 1" class="w-full h-full object-cover transition-transform duration-700">
-                    </div>
-                    <div class="project-overlay absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent opacity-0 transition-all duration-500 flex flex-col justify-end p-8">
-                        <span class="text-indigo-400 text-sm font-medium mb-2">Web Design</span>
-                        <h3 class="text-2xl font-bold mb-2">FinTech Dashboard</h3>
-                        <p class="text-slate-400 text-sm mb-4">A comprehensive financial analytics platform with real-time data visualization.</p>
-                        <span class="text-indigo-400 text-sm flex items-center gap-1">View Project <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
-                    </div>
-                </div>
-                
-                <div class="project-card group relative rounded-3xl overflow-hidden" data-category="brand" onclick="openProjectModal('Aura Cosmetics', 'Branding', 'Complete brand identity for a luxury sustainable cosmetics line.', 'https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop')">
-                    <div class="aspect-[4/3] overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?w=800&h=600&fit=crop" alt="Project 2" class="w-full h-full object-cover transition-transform duration-700">
-                    </div>
-                    <div class="project-overlay absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent opacity-0 transition-all duration-500 flex flex-col justify-end p-8">
-                        <span class="text-purple-400 text-sm font-medium mb-2">Branding</span>
-                        <h3 class="text-2xl font-bold mb-2">Aura Cosmetics</h3>
-                        <p class="text-slate-400 text-sm mb-4">Complete brand identity for a luxury sustainable cosmetics line.</p>
-                        <span class="text-purple-400 text-sm flex items-center gap-1">View Project <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
-                    </div>
-                </div>
-                
-                <div class="project-card group relative rounded-3xl overflow-hidden" data-category="app" onclick="openProjectModal('HealthTrack Pro', 'App Design', 'Mobile health tracking application with AI-powered insights.', 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop')">
-                    <div class="aspect-[4/3] overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop" alt="Project 3" class="w-full h-full object-cover transition-transform duration-700">
-                    </div>
-                    <div class="project-overlay absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent opacity-0 transition-all duration-500 flex flex-col justify-end p-8">
-                        <span class="text-pink-400 text-sm font-medium mb-2">App Design</span>
-                        <h3 class="text-2xl font-bold mb-2">HealthTrack Pro</h3>
-                        <p class="text-slate-400 text-sm mb-4">Mobile health tracking application with AI-powered insights.</p>
-                        <span class="text-pink-400 text-sm flex items-center gap-1">View Project <i data-lucide="arrow-right" class="w-4 h-4"></i></span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center mt-12 reveal-text">
-                <button onclick="showNotification('More projects coming soon!')" class="magnetic-btn px-8 py-4 border border-slate-700 rounded-full font-semibold hover:bg-slate-800 transition-all inline-flex items-center gap-2">
-                    View All Projects
-                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                </button>
-            </div>
-        </div>
-                        </section>
-                            <section class="py-32 relative overflow-hidden">
-        <div class="blob bg-purple-900/20 w-[500px] h-[500px] rounded-full -left-40 bottom-0"></div>
-        <div class="container mx-auto px-6 relative z-10">
-            <div class="text-center max-w-2xl mx-auto mb-16 reveal-text">
-                <span class="text-indigo-400 font-semibold uppercase tracking-wider text-sm">Testimonials</span>
-                <h2 class="text-4xl md:text-5xl font-bold mt-2 mb-4">What Clients Say</h2>
-            </div>
-            
-            <div class="relative max-w-4xl mx-auto">
-                <div class="glass rounded-3xl p-8 md:p-12" id="testimonialContainer">
-                    <div class="testimonial-slide active" data-index="0">
-                        <div class="flex flex-col md:flex-row gap-8 items-center">
-                            <div class="relative cursor-pointer" onclick="openImageModal('IMG_20260325_033609.png')">
-                                <div class="pulse-ring absolute inset-0"></div>
-                                <img src="IMG_20260325_033609.png" alt="Client" class="w-24 h-24 rounded-full object-cover relative z-10 hover:scale-110 transition-transform">
-                            </div>
-                            <div class="flex-1 text-center md:text-left">
-                                <div class="flex justify-center md:justify-start gap-1 mb-4">
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
-                                    <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification('5 Star Rating!')"></i>
+                    <!-- Main Hero Image -->
+                    <div class="relative w-full max-w-md animate-float">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=500&fit=crop" 
+                             alt="Website Design" 
+                             class="rounded-3xl shadow-2xl border border-white/10 w-full object-cover shimmer">
+                        
+                        <!-- Floating Card -->
+                        <div class="absolute -bottom-6 -right-6 glass rounded-2xl p-4 shadow-xl border border-white/10 animate-bounce" style="animation-duration: 3s;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center">
+                                    <i class="fas fa-rocket text-white"></i>
                                 </div>
-                                <p class="text-lg md:text-xl text-slate-300 italic mb-6">"Working with Sweetu was an absolute game-changer for our startup. The attention to detail and creative vision transformed our brand completely. Highly recommended!"</p>
                                 <div>
-                                    <div class="font-bold text-white">Ahmed Khan</div>
-                                    <div class="text-slate-400 text-sm">CEO, Sheikhupura Tech</div>
+                                    <div class="text-sm font-semibold">Projects Done</div>
+                                    <div class="text-2xl font-bold gradient-text">500+</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="flex justify-center gap-3 mt-8">
-                    <button class="testimonial-dot w-3 h-3 rounded-full bg-indigo-600 transition-all hover:scale-125" data-index="0" onclick="changeTestimonial(0)"></button>
-                    <button class="testimonial-dot w-3 h-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-all hover:scale-125" data-index="1" onclick="changeTestimonial(1)"></button>
-                    <button class="testimonial-dot w-3 h-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-all hover:scale-125" data-index="2" onclick="changeTestimonial(2)"></button>
+            </div>
+        </div>
+                <!-- Pricing Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    Choose Your <span class="gradient-text">Package</span>
+                </h2>
+                <p class="text-gray-400 text-lg">Best prices for premium quality websites</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+                <!-- Starter - 1 Page -->
+                <div class="price-card rounded-3xl p-8 card-hover reveal">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden border-2 border-purple-500/30">
+                            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200&h=200&fit=crop" 
+                                 alt="Starter Package" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-1">Starter</h3>
+                        <p class="text-gray-400 text-sm">Single Page Website</p>
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="text-gray-500 line-through text-lg">₨4,998</div>
+                        <div class="text-5xl font-bold gradient-text mb-2">₨2,499</div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-semibold">
+                            <i class="fas fa-tag mr-1"></i>50% OFF
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 mb-8 text-gray-300 text-sm">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>1 Custom Page</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Mobile Responsive</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Basic Animations</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Contact Form</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>3 Revisions</span>
+                        </li>
+                    </ul>
+
+                    <button onclick="selectPackage('starter', 2499)" class="w-full py-3 rounded-xl border border-purple-500/50 text-purple-400 font-semibold hover:bg-purple-500/10 transition-all flex items-center justify-center gap-2">
+                        <span>Select Package</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Business - 2 Pages (Featured) -->
+                <div class="price-card featured rounded-3xl p-8 card-hover reveal relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                        <span class="px-4 py-1 rounded-full gradient-bg text-white text-sm font-bold shadow-lg">
+                            <i class="fas fa-fire mr-1"></i>POPULAR
+                        </span>
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden border-2 border-pink-500/50 pulse-glow">
+                            <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=200&h=200&fit=crop" 
+                                 alt="Business Package" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-1">Business</h3>
+                        <p class="text-gray-400 text-sm">2 Pages Website</p>
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="text-gray-500 line-through text-lg">₨9,998</div>
+                        <div class="text-5xl font-bold gradient-text mb-2">₨4,499</div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-pink-500/20 text-pink-400 text-sm font-semibold">
+                            <i class="fas fa-tag mr-1"></i>55% OFF
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 mb-8 text-gray-300 text-sm">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>2 Custom Pages</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Premium Animations</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Contact Form + Map</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Social Media Integration</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>5 Revisions</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>SEO Optimized</span>
+                        </li>
+                    </ul>
+
+                    <button onclick="selectPackage('business', 4499)" class="w-full py-3 rounded-xl gradient-bg text-white font-semibold shadow-lg hover:shadow-purple-500/50 transition-all flex items-center justify-center gap-2">
+                        <span>Select Package</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Premium - 3 Pages -->
+                <div class="price-card rounded-3xl p-8 card-hover reveal">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl overflow-hidden border-2 border-cyan-500/30">
+                            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200&h=200&fit=crop" 
+                                 alt="Premium Package" 
+                                 class="w-full h-full object-cover">
+                        </div>
+                        <h3 class="text-2xl font-bold mb-1">Premium</h3>
+                        <p class="text-gray-400 text-sm">3 Pages Website</p>
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <div class="text-gray-500 line-through text-lg">₨16,247</div>
+                        <div class="text-5xl font-bold gradient-text mb-2">₨6,499</div>
+                        <div class="inline-block px-3 py-1 rounded-full bg-purple-500/20 text-purple-400 text-sm font-semibold">
+                            <i class="fas fa-tag mr-1"></i>60% OFF
+                        </div>
+                    </div>
+
+                    <ul class="space-y-3 mb-8 text-gray-300 text-sm">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>3 Complete Pages</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Advanced Animations</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Gallery/Portfolio</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>WhatsApp Integration</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>Unlimited Revisions</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-check text-green-400"></i>
+                            <span>1 Month Free Support</span>
+                        </li>
+                    </ul>
+
+                    <button onclick="selectPackage('premium', 6499)" class="w-full py-3 rounded-xl border border-cyan-500/50 text-cyan-400 font-semibold hover:bg-cyan-500/10 transition-all flex items-center justify-center gap-2">
+                        <span>Select Package</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
-                            </section>
-                                <section id="contact" class="py-32 relative">
-        <div class="container mx-auto px-6">
-            <div class="grid lg:grid-cols-2 gap-16">
-                <div class="reveal-text">
-                    <span class="text-indigo-400 font-semibold uppercase tracking-wider text-sm">Get In Touch</span>
-                    <h2 class="text-4xl md:text-5xl font-bold mt-2 mb-6">Let's Create Something Amazing Together</h2>
-                    <p class="text-slate-400 text-lg mb-8">Have a project in mind? I'd love to hear about it. Send me a message and let's discuss how we can bring your vision to life.</p>
+    </section>
+        <!-- ABOUT PAGE -->
+    <section id="about" class="page-section hidden min-h-screen pt-32 pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center mb-20">
+                <div class="reveal">
+                    <h2 class="text-4xl md:text-6xl font-bold mb-6">
+                        About <span class="gradient-text">Sweetu</span>
+                    </h2>
+                    <p class="text-xl text-gray-300 mb-6 leading-relaxed">
+                        Hum professional web designers hain jo Pakistan mein businesses ko digital presence dete hain. Hamara mission hai ke har business owner apni website afford kar sake.
+                    </p>
+                    <p class="text-gray-400 mb-8 leading-relaxed">
+                        3 saal se zyada experience ke saath, humne 500+ websites banayi hain. Hamari team expert designers aur developers par mushtamil hai jo latest technologies use karte hain.
+                    </p>
                     
-                    <div class="space-y-6">
-                        <a href="mailto:sheikhsahibbrand@gmail.com" class="flex items-center gap-4 group cursor-pointer hover:bg-slate-800/50 p-3 rounded-xl transition-all">
-                            <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
-                                <i data-lucide="mail" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm text-slate-400">Email</div>
-                                <div class="font-semibold group-hover:text-indigo-400 transition-colors">sheikhsahibbrand@gmail.com</div>
-                            </div>
-                        </a>
-                        
-                        <div class="flex items-center gap-4 group cursor-pointer hover:bg-slate-800/50 p-3 rounded-xl transition-all" onclick="showNotification('Main Bazar, Sheikhupura, Pakistan')">
-                            <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
-                                <i data-lucide="map-pin" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm text-slate-400">Location</div>
-                                <div class="font-semibold">Main Bazar, Sheikhupura, Pakistan</div>
-                            </div>
+                    <div class="grid grid-cols-3 gap-6">
+                        <div class="text-center p-4 glass rounded-xl">
+                            <div class="text-4xl font-bold gradient-text mb-1">500+</div>
+                            <div class="text-sm text-gray-400">Projects</div>
                         </div>
-                        
-                        <a href="tel:03016305418" class="flex items-center gap-4 group cursor-pointer hover:bg-slate-800/50 p-3 rounded-xl transition-all">
-                            <div class="w-12 h-12 rounded-xl bg-slate-800 flex items-center justify-center group-hover:bg-indigo-600 transition-colors">
-                                <i data-lucide="phone" class="w-5 h-5"></i>
-                            </div>
-                            <div>
-                                <div class="text-sm text-slate-400">Phone / WhatsApp</div>
-                                <div class="font-semibold group-hover:text-indigo-400 transition-colors">0301-6305418</div>
-                            </div>
-                        </a>
-                    </div>
-                    
-                    <div class="flex gap-4 mt-8">
-                        <a href="https://wa.me/923016305418" target="_blank" class="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center hover:bg-green-700 transition-all hover:scale-110 magnetic-btn">
-                            <i data-lucide="message-circle" class="w-6 h-6 text-white fill-white"></i>
-                        </a>
-                        <a href="https://facebook.com" target="_blank" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-all hover:scale-110 magnetic-btn">
-                            <i data-lucide="facebook" class="w-5 h-5"></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-pink-600 transition-all hover:scale-110 magnetic-btn">
-                            <i data-lucide="instagram" class="w-5 h-5"></i>
-                        </a>
-                        <a href="https://linkedin.com" target="_blank" class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-700 transition-all hover:scale-110 magnetic-btn">
-                            <i data-lucide="linkedin" class="w-5 h-5"></i>
-                        </a>
+                        <div class="text-center p-4 glass rounded-xl">
+                            <div class="text-4xl font-bold gradient-text mb-1">98%</div>
+                            <div class="text-sm text-gray-400">Happy Clients</div>
+                        </div>
+                        <div class="text-center p-4 glass rounded-xl">
+                            <div class="text-4xl font-bold gradient-text mb-1">24/7</div>
+                            <div class="text-sm text-gray-400">Support</div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="glass rounded-3xl p-8 reveal-text">
-                    <form id="contactForm" class="space-y-6" onsubmit="handleFormSubmit(event)">
-                        <div class="grid md:grid-cols-2 gap-6">
+
+                <div class="relative reveal">
+                    <div class="absolute inset-0 gradient-bg rounded-3xl blur-3xl opacity-30 animate-pulse"></div>
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=500&fit=crop" 
+                         alt="Our Team" 
+                         class="relative rounded-3xl shadow-2xl border border-white/10 w-full object-cover shimmer">
+                </div>
+            </div>
+
+            <!-- Services -->
+            <div class="mb-20">
+                <h3 class="text-3xl font-bold text-center mb-12 reveal">Our Services</h3>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="glass rounded-2xl p-8 hover:transform hover:scale-105 transition-all duration-300 reveal">
+                        <div class="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center text-3xl mb-6">
+                            <i class="fas fa-laptop-code text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Web Development</h4>
+                        <p class="text-gray-400 text-sm">Custom coded websites with latest technologies like HTML5, CSS3, and JavaScript.</p>
+                    </div>
+
+                    <div class="glass rounded-2xl p-8 hover:transform hover:scale-105 transition-all duration-300 reveal">
+                        <div class="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center text-3xl mb-6">
+                            <i class="fas fa-paint-brush text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">UI/UX Design</h4>
+                        <p class="text-gray-400 text-sm">Beautiful and user-friendly designs that attract and retain customers.</p>
+                    </div>
+
+                    <div class="glass rounded-2xl p-8 hover:transform hover:scale-105 transition-all duration-300 reveal">
+                        <div class="w-16 h-16 rounded-2xl gradient-bg flex items-center justify-center text-3xl mb-6">
+                            <i class="fas fa-mobile-alt text-white"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3">Responsive Design</h4>
+                        <p class="text-gray-400 text-sm">Websites that work perfectly on mobile, tablet, and desktop devices.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- CONTACT PAGE -->
+    <section id="contact" class="page-section hidden min-h-screen pt-32 pb-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl md:text-6xl font-bold mb-4">
+                    Get In <span class="gradient-text">Touch</span>
+                </h2>
+                <p class="text-gray-400 text-lg">Apni website order karein ya mazeed maloomat hasil karein</p>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+                <!-- Contact Info -->
+                <div class="space-y-6 reveal">
+                    <!-- WhatsApp -->
+                    <a href="https://wa.me/923016305418" target="_blank" 
+                       class="flex items-center gap-4 p-6 rounded-2xl glass border border-green-500/30 hover:bg-green-500/10 transition-all group">
+                        <div class="w-14 h-14 rounded-full bg-green-500 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-400">WhatsApp</div>
+                            <div class="font-semibold text-green-400 text-lg">0301 6305418</div>
+                        </div>
+                        <i class="fas fa-external-link-alt text-gray-500"></i>
+                    </a>
+
+                    <!-- Email -->
+                    <a href="mailto:sheikhsahibbrand@gmail.com" 
+                       class="flex items-center gap-4 p-6 rounded-2xl glass border border-blue-500/30 hover:bg-blue-500/10 transition-all group">
+                        <div class="w-14 h-14 rounded-full bg-blue-500 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-400">Email</div>
+                            <div class="font-semibold text-blue-400 text-lg">sheikhsahibbrand@gmail.com</div>
+                        </div>
+                        <i class="fas fa-external-link-alt text-gray-500"></i>
+                    </a>
+
+                    <!-- JazzCash -->
+                    <button onclick="openJazzCashModal()" 
+                            class="w-full flex items-center gap-4 p-6 rounded-2xl jazzcash-gradient border border-pink-500/30 hover:opacity-90 transition-all group">
+                        <div class="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="flex-1 text-left">
+                            <div class="text-sm text-pink-200">JazzCash Payment</div>
+                            <div class="font-semibold text-white text-lg">Pay via JazzCash</div>
+                        </div>
+                        <i class="fas fa-arrow-right text-white"></i>
+                    </button>
+
+                    <!-- Instagram -->
+                    <a href="https://www.instagram.com/sweetu_hun_yawr?igsh=MXRndmg1Ym1hbjNzbg==" target="_blank"
+                       class="flex items-center gap-4 p-6 rounded-2xl glass border border-pink-500/30 hover:bg-pink-500/10 transition-all group">
+                        <div class="w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl group-hover:scale-110 transition-transform">
+                            <i class="fab fa-instagram"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-sm text-gray-400">Instagram</div>
+                            <div class="font-semibold text-pink-400 text-lg">@sweetu_hun_yawr</div>
+                        </div>
+                        <i class="fas fa-external-link-alt text-gray-500"></i>
+                    </a>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="glass rounded-3xl p-8 border border-white/10 reveal">
+                    <h3 class="text-2xl font-bold mb-6">Send Message</h3>
+                    <form id="contactForm" onsubmit="handleContactSubmit(event)" class="space-y-5">
+                        <div class="grid md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-sm font-medium mb-2">Name</label>
-                                <input type="text" id="contactName" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors" placeholder="Your Name" required>
+                                <label class="block text-sm font-medium text-gray-400 mb-2">Name *</label>
+                                <input type="text" id="contactName" required 
+                                       class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors text-white" 
+                                       placeholder="Your name">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium mb-2">Email</label>
-                                <input type="email" id="contactEmail" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors" placeholder="your@email.com" required>
+                                <label class="block text-sm font-medium text-gray-400 mb-2">Phone *</label>
+                                <input type="tel" id="contactPhone" required 
+                                       class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors text-white" 
+                                       placeholder="03XX XXXXXXX">
                             </div>
                         </div>
+                        
                         <div>
-                            <label class="block text-sm font-medium mb-2">Project Type</label>
-                            <select id="projectType" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors cursor-pointer">
-                                <option value="Web Design">Web Design</option>
-                                <option value="Web Development">Web Development</option>
-                                <option value="Brand Identity">Brand Identity</option>
-                                <option value="Mobile App">Mobile App</option>
-                                <option value="Other">Other</option>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Email *</label>
+                            <input type="email" id="contactEmail" required 
+                                   class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors text-white" 
+                                   placeholder="your@email.com">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Selected Package</label>
+                            <select id="packageSelect" 
+                                    class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors text-white">
+                                <option value="">Select a package...</option>
+                                <option value="starter">Starter - 1 Page (₨2,499)</option>
+                                <option value="business">Business - 2 Pages (₨4,499)</option>
+                                <option value="premium">Premium - 3 Pages (₨6,499)</option>
                             </select>
                         </div>
+
                         <div>
-                            <label class="block text-sm font-medium mb-2">Message</label>
-                            <textarea id="contactMessage" rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-800/50 border border-slate-700 focus:border-indigo-500 focus:outline-none transition-colors resize-none" placeholder="Tell me about your project..." required></textarea>
+                            <label class="block text-sm font-medium text-gray-400 mb-2">Message *</label>
+                            <textarea id="contactMessage" rows="4" required 
+                                      class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none transition-colors text-white resize-none" 
+                                      placeholder="Describe your requirements..."></textarea>
                         </div>
-                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2 group magnetic-btn">
+
+                        <button type="submit" 
+                                class="w-full py-4 rounded-xl gradient-bg text-white font-semibold shadow-lg hover:shadow-purple-500/50 transition-all flex items-center justify-center gap-2">
                             <span>Send Message</span>
-                            <i data-lucide="send" class="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                            <i class="fas fa-paper-plane"></i>
                         </button>
-                        <a href="https://wa.me/923016305418" target="_blank" class="w-full py-4 bg-green-600 rounded-xl font-semibold hover:bg-green-700 transition-all flex items-center justify-center gap-2 group magnetic-btn">
-                            <i data-lucide="message-circle" class="w-5 h-5"></i>
-                            <span>Or Chat on WhatsApp</span>
-                        </a>
                     </form>
                 </div>
             </div>
         </div>
-                                </section>
-                                    <footer class="py-12 border-t border-slate-800">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <a href="#" class="text-2xl font-bold gradient-text tracking-tighter cursor-pointer" onclick="window.scrollTo(0,0); return false;">SWEETU</a>
-                <div class="text-slate-400 text-sm">© 2026 Sweetu. All rights reserved.</div>
-                <div class="flex gap-6 text-sm">
-                    <button onclick="showNotification('Privacy Policy coming soon!')" class="text-slate-400 hover:text-white transition-colors">Privacy</button>
-                    <button onclick="showNotification('Terms of Service coming soon!')" class="text-slate-400 hover:text-white transition-colors">Terms</button>
+    </section>
+        <!-- Footer -->
+    <footer class="border-t border-white/10 bg-black/20 backdrop-blur-lg mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+                            <i class="fas fa-heart text-white"></i>
+                        </div>
+                        <span class="text-2xl font-bold">Sweetu</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed max-w-sm">
+                        Professional website solutions for businesses in Pakistan. Quality designs at affordable prices.
+                    </p>
                 </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a onclick="showPage('home')" class="hover:text-white cursor-pointer transition-colors">Home</a></li>
+                        <li><a onclick="showPage('about')" class="hover:text-white cursor-pointer transition-colors">About</a></li>
+                        <li><a onclick="showPage('contact')" class="hover:text-white cursor-pointer transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold mb-4">Connect</h4>
+                    <div class="flex space-x-3">
+                        <a href="https://www.instagram.com/sweetu_hun_yawr" target="_blank" 
+                           class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-pink-500/20 transition-colors text-pink-400">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://wa.me/923016305418" target="_blank"
+                           class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-green-500/20 transition-colors text-green-400">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="mailto:sheikhsahibbrand@gmail.com"
+                           class="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-blue-500/20 transition-colors text-blue-400">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 text-center text-sm text-gray-500">
+                <p>&copy; 2024 Sweetu. All rights reserved. Made with <i class="fas fa-heart text-red-500"></i> in Pakistan</p>
             </div>
         </div>
     </footer>
 
-    <!-- Image Modal -->
-    <div id="imageModal" class="modal" onclick="closeImageModal()">
-        <div class="modal-content p-4" onclick="event.stopPropagation()">
-            <button onclick="closeImageModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition-colors z-10">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <img id="modalImage" src="" alt="Full view" class="w-full rounded-xl">
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('login')"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
+            <div class="glass rounded-3xl p-8 border border-white/20 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Welcome Back</h3>
+                    <button onclick="closeModal('login')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Email</label>
+                        <input type="email" id="loginEmail" required 
+                               class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none text-white" 
+                               placeholder="your@email.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Password</label>
+                        <input type="password" id="loginPassword" required 
+                               class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none text-white" 
+                               placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl gradient-bg text-white font-semibold hover:opacity-90 transition-opacity">
+                        Login
+                    </button>
+                </form>
+                
+                <p class="mt-4 text-center text-sm text-gray-400">
+                    Don't have an account? 
+                    <button onclick="switchModal('login', 'signup')" class="text-purple-400 hover:text-purple-300">Sign up</button>
+                </p>
+            </div>
         </div>
     </div>
 
-    <!-- Project Modal -->
-    <div id="projectModal" class="modal" onclick="closeProjectModal()">
-        <div class="modal-content p-6" onclick="event.stopPropagation()">
-            <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-slate-700 transition-colors z-10">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <img id="projectModalImage" src="" alt="Project" class="w-full h-64 object-cover rounded-xl mb-4">
-            <span id="projectModalCategory" class="text-indigo-400 text-sm font-medium"></span>
-            <h3 id="projectModalTitle" class="text-2xl font-bold mt-2 mb-3"></h3>
-            <p id="projectModalDesc" class="text-slate-400 mb-6"></p>
-            <a href="https://wa.me/923016305418" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 bg-green-600 rounded-xl font-semibold hover:bg-green-700 transition-all">
-                <i data-lucide="message-circle" class="w-5 h-5"></i>
-                Discuss Project on WhatsApp
-            </a>
+    <!-- Signup Modal -->
+    <div id="signupModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('signup')"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
+            <div class="glass rounded-3xl p-8 border border-white/20 shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold">Create Account</h3>
+                    <button onclick="closeModal('signup')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <form onsubmit="handleSignup(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Full Name</label>
+                        <input type="text" id="signupName" required 
+                               class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none text-white" 
+                               placeholder="Your name">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Email</label>
+                        <input type="email" id="signupEmail" required 
+                               class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none text-white" 
+                               placeholder="your@email.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-gray-400 mb-2">Password</label>
+                        <input type="password" id="signupPassword" required 
+                               class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-purple-500 focus:outline-none text-white" 
+                               placeholder="••••••••">
+                    </div>
+                    <button type="submit" class="w-full py-3 rounded-xl gradient-bg text-white font-semibold hover:opacity-90 transition-opacity">
+                        Create Account
+                    </button>
+                </form>
+                
+                <p class="mt-4 text-center text-sm text-gray-400">
+                    Already have an account? 
+                    <button onclick="switchModal('signup', 'login')" class="text-purple-400 hover:text-purple-300">Login</button>
+                </p>
+            </div>
+        </div>
+                        </div>
+        <!-- JazzCash Payment Modal -->
+    <div id="jazzcashModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('jazzcash')"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md p-4">
+            <div class="glass rounded-3xl p-8 border border-pink-500/30 shadow-2xl shadow-pink-500/20">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-xl jazzcash-gradient flex items-center justify-center">
+                            <i class="fas fa-wallet text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">JazzCash Payment</h3>
+                            <p class="text-sm text-gray-400">Secure Payment to 03016305418</p>
+                        </div>
+                    </div>
+                    <button onclick="closeModal('jazzcash')" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                        <label class="block text-sm text-gray-400 mb-2">Your JazzCash Number</label>
+                        <input type="tel" id="jazzcashNumber" placeholder="03XX XXXXXXX" 
+                               class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-pink-500 focus:outline-none text-white text-lg tracking-wider">
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                        <label class="block text-sm text-gray-400 mb-2">Amount (PKR)</label>
+                        <input type="number" id="paymentAmount" placeholder="2499" 
+                               class="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 focus:border-pink-500 focus:outline-none text-white text-lg">
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-pink-500/10 border border-pink-500/30">
+                        <div class="flex items-center gap-2 text-pink-300 text-sm">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Payment will be sent to: <strong>03016305418</strong></span>
+                        </div>
+                    </div>
+
+                    <button onclick="processJazzCashPayment()" 
+                            class="w-full py-4 rounded-xl jazzcash-gradient text-white font-bold text-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                        <span>Pay Now</span>
+                        <i class="fas fa-lock"></i>
+                    </button>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5">
+                        <i class="fas fa-shield-alt text-green-400"></i>
+                        <span class="text-sm text-gray-400">100% Secure Payment</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Notification Toast -->
-    <div id="notification" class="fixed top-24 right-6 bg-indigo-600 text-white px-6 py-3 rounded-xl shadow-lg transform translate-x-full transition-transform duration-300 z-[10001] flex items-center gap-2">
-        <i data-lucide="info" class="w-5 h-5"></i>
-        <span id="notificationText"></span>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-4 right-4 transform translate-y-20 opacity-0 transition-all duration-300 z-[70]">
+        <div class="glass rounded-xl px-6 py-4 border border-white/20 shadow-2xl flex items-center gap-3">
+            <i id="toastIcon" class="fas fa-check-circle text-green-400 text-xl"></i>
+            <span id="toastMessage" class="font-medium">Operation successful</span>
+        </div>
     </div>
-
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
-
-        // Custom Cursor
-        const cursor = document.getElementById('cursor');
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
-        
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-        
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.1;
-            cursorY += (mouseY - cursorY) * 0.1;
-            cursor.style.left = cursorX - 10 + 'px';
-            cursor.style.top = cursorY - 10 + 'px';
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-        
-        const interactiveElements = document.querySelectorAll('a, button, .project-card, .tilt-card, [onclick]');
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hovering'));
-        });
-
-        // Scroll Functions
-        function scrollToSection(sectionId) {
-            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+        <script>
+        // ==================== NAVIGATION ====================
+        function showPage(pageName) {
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.add('hidden');
+            });
+            document.getElementById(pageName).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.location.hash = pageName;
+            setTimeout(observeElements, 100);
         }
 
-        // Mobile Menu
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-        }
-        
-        function closeMobileMenu() {
-            document.getElementById('mobileMenu').classList.add('hidden');
+            document.getElementById('mobileMenu').classList.toggle('hidden');
         }
 
-        // Notification System
-        function showNotification(message) {
-            const notification = document.getElementById('notification');
-            const text = document.getElementById('notificationText');
-            text.textContent = message;
-            notification.classList.remove('translate-x-full');
+        // ==================== MODALS ====================
+        function openModal(type) {
+            document.getElementById(type + 'Modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(type) {
+            document.getElementById(type + 'Modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        function switchModal(from, to) {
+            closeModal(from);
+            setTimeout(() => openModal(to), 300);
+        }
+
+        function openJazzCashModal() {
+            openModal('jazzcash');
+        }
+
+        // ==================== FIREBASE AUTH ====================
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showToast('Login successful! Welcome back.', 'success');
+                closeModal('login');
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                
+                // Save user data to Firestore
+                await db.collection('users').doc(userCredential.user.uid).set({
+                    name: name,
+                    email: email,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                showToast('Account created successfully!', 'success');
+                closeModal('signup');
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                await auth.signOut();
+                showToast('Logged out successfully', 'success');
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== FIREBASE CONTACT FORM ====================
+        async function handleContactSubmit(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('contactName').value,
+                phone: document.getElementById('contactPhone').value,
+                email: document.getElementById('contactEmail').value,
+                package: document.getElementById('packageSelect').value,
+                message: document.getElementById('contactMessage').value,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                status: 'pending'
+            };
+
+            try {
+                // Save to Firestore
+                await db.collection('contacts').add(formData);
+                
+                // Also save to user's subcollection if logged in
+                if (currentUser) {
+                    await db.collection('users').doc(currentUser.uid).collection('inquiries').add(formData);
+                }
+                
+                showToast('Message sent successfully! We will contact you soon.', 'success');
+                document.getElementById('contactForm').reset();
+            } catch (error) {
+                showToast('Error sending message: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== PACKAGE SELECTION ====================
+        function selectPackage(packageType, amount) {
+            showPage('contact');
+            document.getElementById('packageSelect').value = packageType;
+            
+            // Pre-fill amount in JazzCash if opened
+            document.getElementById('paymentAmount').value = amount;
+            
+            showToast(packageType.charAt(0).toUpperCase() + packageType.slice(1) + ' package selected!', 'info');
+        }
+
+        // ==================== JAZZCASH PAYMENT ====================
+        async function processJazzCashPayment() {
+            const number = document.getElementById('jazzcashNumber').value;
+            const amount = document.getElementById('paymentAmount').value;
+            
+            if (!number || number.length < 11) {
+                showToast('Please enter valid JazzCash number', 'error');
+                return;
+            }
+            
+            if (!amount || amount < 1) {
+                showToast('Please enter valid amount', 'error');
+                return;
+            }
+            
+            const paymentData = {
+                customerNumber: number,
+                amount: parseInt(amount),
+                merchantNumber: '03016305418',
+                status: 'pending',
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                userId: currentUser ? currentUser.uid : 'guest'
+            };
+            
+            try {
+                // Save payment to Firestore
+                await db.collection('payments').add(paymentData);
+                
+                showToast('Payment initiated! Check your phone to confirm.', 'success');
+                closeModal('jazzcash');
+                
+                // Reset form
+                document.getElementById('jazzcashNumber').value = '';
+                document.getElementById('paymentAmount').value = '';
+            } catch (error) {
+                showToast('Error processing payment: ' + error.message, 'error');
+            }
+        }
+
+        // ==================== TOAST NOTIFICATION ====================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+            
+            toastMessage.textContent = message;
+            
+            if (type === 'success') {
+                toastIcon.className = 'fas fa-check-circle text-green-400 text-xl';
+            } else if (type === 'error') {
+                toastIcon.className = 'fas fa-exclamation-circle text-red-400 text-xl';
+            } else {
+                toastIcon.className = 'fas fa-info-circle text-blue-400 text-xl';
+            }
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
             setTimeout(() => {
-                notification.classList.add('translate-x-full');
+                toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
         }
 
-        // Image Modal
-        function openImageModal(src) {
-            document.getElementById('modalImage').src = src;
-            document.getElementById('imageModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeImageModal() {
-            document.getElementById('imageModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Project Modal
-        function openProjectModal(title, category, desc, image) {
-            document.getElementById('projectModalTitle').textContent = title;
-            document.getElementById('projectModalCategory').textContent = category;
-            document.getElementById('projectModalDesc').textContent = desc;
-            document.getElementById('projectModalImage').src = image;
-            document.getElementById('projectModal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeProjectModal() {
-            document.getElementById('projectModal').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Service Detail
-        function showServiceDetail(service) {
-            showNotification(`${service} - Contact me on WhatsApp for details!`);
-        }
-
-        // Portfolio Filter
-        function filterPortfolio(filter, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.remove('active', 'bg-indigo-600', 'text-white');
-                b.classList.add('bg-slate-800', 'text-slate-400');
-            });
-            btn.classList.add('active', 'bg-indigo-600', 'text-white');
-            btn.classList.remove('bg-slate-800', 'text-slate-400');
-            
-            const items = document.querySelectorAll('.project-card');
-            items.forEach(item => {
-                if (filter === 'all' || item.getAttribute('data-category') === filter) {
-                    item.style.display = 'block';
-                    setTimeout(() => {
-                        item.style.opacity = '1';
-                        item.style.transform = 'scale(1)';
-                    }, 10);
-                } else {
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.8)';
-                    setTimeout(() => {
-                        item.style.display = 'none';
-                    }, 300);
-                }
-            });
-        }
-
-        // Testimonials
-        const testimonials = [
-            {
-                text: '"Working with Sweetu was an absolute game-changer for our startup. The attention to detail and creative vision transformed our brand completely. Highly recommended!"',
-                name: 'Ahmed Khan',
-                role: 'CEO, Sheikhupura Tech'
-            },
-            {
-                text: '"The level of professionalism and creativity exceeded all expectations. Our new website has increased conversions by 150% since launch. Great work from Sheikhupura!"',
-                name: 'Muhammad Ali',
-                role: 'Founder, Local Business'
-            },
-            {
-                text: '"Exceptional work on our mobile app design. The user experience is intuitive and beautiful. Highly recommended for anyone in Sheikhupura looking for quality design work."',
-                name: 'Bilal Hassan',
-                role: 'Product Lead, Startup'
-            }
-        ];
-
-        function changeTestimonial(index) {
-            const container = document.getElementById('testimonialContainer');
-            const t = testimonials[index];
-            container.innerHTML = `
-                <div class="testimonial-slide active" data-index="${index}">
-                    <div class="flex flex-col md:flex-row gap-8 items-center">
-                        <div class="relative cursor-pointer" onclick="openImageModal('IMG_20260325_033609.png')">
-                            <div class="pulse-ring absolute inset-0"></div>
-                            <img src="IMG_20260325_033609.png" alt="Client" class="w-24 h-24 rounded-full object-cover relative z-10 hover:scale-110 transition-transform">
-                        </div>
-                        <div class="flex-1 text-center md:text-left">
-                            <div class="flex justify-center md:justify-start gap-1 mb-4">
-                                ${[1,2,3,4,5].map(() => '<i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400 cursor-pointer hover:scale-110 transition-transform" onclick="showNotification(\'5 Star Rating!\')"></i>').join('')}
-                            </div>
-                            <p class="text-lg md:text-xl text-slate-300 italic mb-6">${t.text}</p>
-                            <div>
-                                <div class="font-bold text-white">${t.name}</div>
-                                <div class="text-slate-400 text-sm">${t.role}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            lucide.createIcons();
-            
-            document.querySelectorAll('.testimonial-dot').forEach((d, i) => {
-                if (i === index) {
-                    d.classList.remove('bg-slate-700');
-                    d.classList.add('bg-indigo-600');
-                } else {
-                    d.classList.add('bg-slate-700');
-                    d.classList.remove('bg-indigo-600');
-                }
-            });
-        }
-
-        // Form Handling
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalContent = btn.innerHTML;
-            
-            btn.innerHTML = '<div class="loader w-5 h-5"></div>';
-            btn.disabled = true;
-            
-            const name = document.getElementById('contactName').value;
-            const email = document.getElementById('contactEmail').value;
-            const type = document.getElementById('projectType').value;
-            const message = document.getElementById('contactMessage').value;
-            
-            setTimeout(() => {
-                btn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i> Message Sent!';
-                btn.classList.remove('from-indigo-600', 'to-purple-600');
-                btn.classList.add('bg-green-600');
-                lucide.createIcons();
-                showNotification(`Thanks ${name}! Your message has been sent.`);
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.classList.add('from-indigo-600', 'to-purple-600');
-                    btn.classList.remove('bg-green-600');
-                    btn.disabled = false;
-                    e.target.reset();
-                    lucide.createIcons();
-                }, 3000);
-            }, 1500);
-        }
-
-        // Download CV
-        function downloadCV() {
-            showNotification('CV Download started!');
-            setTimeout(() => {
-                const link = document.createElement('a');
-                link.href = 'data:text/plain;charset=utf-8,Sweetu - Creative Designer & Developer\n\nContact: sheikhsahibbrand@gmail.com\nPhone: 0301-6305418\nLocation: Main Bazar, Sheikhupura\n\nSkills:\n- UI/UX Design (95%)\n- Frontend Development (90%)\n- Brand Identity (85%)\n- Motion Design (80%)';
-                link.download = 'Sweetu_CV.txt';
-                link.click();
-            }, 1000);
-        }
-
-        // Intersection Observer for Animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-        
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                    if (entry.target.querySelector('.skill-bar')) {
-                        entry.target.querySelectorAll('.skill-bar').forEach(bar => {
-                            bar.classList.add('active');
-                        });
+        // ==================== SCROLL ANIMATIONS ====================
+        function observeElements() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
                     }
-                    if (entry.target.querySelector('.counter')) {
-                        entry.target.querySelectorAll('.counter').forEach(counter => {
-                            const target = parseInt(counter.getAttribute('data-target'));
-                            animateCounter(counter, target);
-                        });
-                    }
-                }
-            });
-        }, observerOptions);
-        
-        document.querySelectorAll('.reveal-text, .stagger-children').forEach(el => observer.observe(el));
-        
-        function animateCounter(element, target) {
-            let current = 0;
-            const increment = target / 50;
-            const timer = setInterval(() => {
-                current += increment;
-                if (current >= target) {
-                    element.textContent = target + (target > 100 ? '+' : '');
-                    clearInterval(timer);
-                } else {
-                    element.textContent = Math.floor(current);
-                }
-            }, 30);
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
         }
 
-        // 3D Tilt Effect
-        const tiltCards = document.querySelectorAll('[data-tilt]');
-        tiltCards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const rotateX = (y - centerY) / 10;
-                const rotateY = (centerX - x) / 10;
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
-            });
-        });
+        // ==================== TYPEWRITER EFFECT ====================
+        const words = ['Dream Website', 'Online Presence', 'Brand Identity', 'Digital Store'];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterElement = document.getElementById('typewriter');
 
-        // Magnetic Buttons
-        const magneticBtns = document.querySelectorAll('.magnetic-btn');
-        magneticBtns.forEach(btn => {
-            btn.addEventListener('mousemove', (e) => {
-                const rect = btn.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-            });
-            btn.addEventListener('mouseleave', () => {
-                btn.style.transform = 'translate(0, 0)';
-            });
-        });
-
-        // Navbar Scroll Effect
-        const navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', () => {
-            if (window.pageYOffset > 100) {
-                navbar.classList.add('shadow-lg', 'shadow-indigo-500/10');
+        function typeWriter() {
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                typewriterElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
             } else {
-                navbar.classList.remove('shadow-lg', 'shadow-indigo-500/10');
+                typewriterElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(typeWriter, typeSpeed);
+        }
+
+        // ==================== INITIALIZE ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            observeElements();
+            typeWriter();
+            
+            // Check for hash in URL
+            const hash = window.location.hash.replace('#', '');
+            if (hash && document.getElementById(hash)) {
+                showPage(hash);
             }
         });
 
-        // Parallax Blobs
-        document.addEventListener('mousemove', (e) => {
-            const blobs = document.querySelectorAll('.blob');
-            const x = e.clientX / window.innerWidth;
-            const y = e.clientY / window.innerHeight;
-            blobs.forEach((blob, index) => {
-                const speed = (index + 1) * 20;
-                const xOffset = (0.5 - x) * speed;
-                const yOffset = (0.5 - y) * speed;
-                blob.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-            });
-        });
-
-        // Keyboard Navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeImageModal();
-                closeProjectModal();
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
             }
         });
     </script>
 </body>
-    </html>
-    
+</html>
